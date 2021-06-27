@@ -3,38 +3,48 @@
  */
 package roadgraph;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import geography.GeographicPoint;
 
 /**
  * @author Stone
  *
  */
-public class MapNode implements Comparable<MapNode> {
-
-//	private HashSet<MapEdge> edges;
-	private GeographicPoint location;
+public class MapNode extends GeographicPoint implements Comparable<MapNode> {
+	
+	//fields
+	private HashSet<MapEdge> edgeSet;
 	private double distance;
 	
-	public MapNode(GeographicPoint point) {
-		if (point == null) throw new IllegalArgumentException();
-		
-		this.location = point;
-		distance = Double.MAX_VALUE;
-	}
-	
-	public MapNode(GeographicPoint point, double dist) {
-		this(point);
-		this.distance = dist;
-	}
-	
+	//Constructors
 	public MapNode(double latitude, double longitude) {
-		this(new GeographicPoint(latitude, longitude));
+		super(latitude, longitude);
+		edgeSet = new HashSet<MapEdge>();
+		distance = java.lang.Double.MAX_VALUE;
 	}
 	
-	public MapNode(double latitude, double longitude, double dist) {
-		this(new GeographicPoint(latitude, longitude), dist);
+	//Methods
+	public void addEdge(MapEdge edge) {
+		edgeSet.add(edge);
 	}
 	
+	public void removeEdge(MapEdge edge) {
+		edgeSet.remove(edge);
+	}
+	
+	public Set<MapEdge> getEdges() {
+		return this.edgeSet;
+	}
+	
+	public Set<GeographicPoint> getNeighbors() {
+		Set<GeographicPoint> result = new HashSet<GeographicPoint>();
+		for (MapEdge edge : edgeSet) {
+			result.add(edge.getTo());
+		}
+		return result;
+	}
 	
 	public double getDistance() {
 		return distance;
@@ -44,16 +54,13 @@ public class MapNode implements Comparable<MapNode> {
 		distance = num;
 	}
 	
-	public GeographicPoint getLocation() {
-		return location;
-	}
-	
 	/**
 	 * The instance of this class is compared by the field "distance"
-	 * If the distance of this object is larger than the 
-	 * node passed in as an argument, then return a positive value
-	 * If the distance of this object is less than the 
-	 * node passed in as an argument, then return a negative value
+	 * @param node is another MapNode to be compared with this object.
+	 * @return positive number if the distance of this object is larger 
+	 * than the node passed in as an argument.
+	 * @return negative number if the distance of this object is less 
+	 * than the node passed in as an argument.
 	 */
 	public int compareTo(MapNode node) {
 		if (!(node instanceof MapNode) || node == null) 
@@ -75,17 +82,6 @@ public class MapNode implements Comparable<MapNode> {
 		
 		MapNode node = (MapNode) obj;
 		
-		return this.location.equals(node.location);
+		return false;
 	}
-	
-	/** Because we compare nodes using their location, we also 
-	 * may use their location for HashCode.
-	 * @return The HashCode for this node, which is the HashCode for the 
-	 * underlying point
-	 */
-	@Override
-	public int hashCode() {
-		return location.hashCode();
-	}
-	
 }
