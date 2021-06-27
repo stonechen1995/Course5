@@ -33,7 +33,8 @@ import util.GraphLoader;
 public class MapGraph {
 	//TODO: Add your member variables here in WEEK 3
 	private HashMap<GeographicPoint, HashSet<MapEdge>> adjListMap; //HashSet<MapEdge> includes outgoing edges
-
+	
+	
 	/** 
 	 * Create a new empty MapGraph 
 	 */
@@ -61,6 +62,7 @@ public class MapGraph {
 	{
 		//TODO: Implement this method in WEEK 3 
 		return adjListMap.keySet();
+
 	}
 	
 	/**
@@ -242,6 +244,8 @@ public class MapGraph {
 
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
+		
+//		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>();
 		
 		return null;
 	}

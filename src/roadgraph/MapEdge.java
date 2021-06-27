@@ -76,11 +76,11 @@ public class MapEdge {
 		return length;
 	}
 	
-	public void setFrom(GeographicPoint from) {
+	public void setFrom(MapNode from) {
 		this.from = from;
 	}
 	
-	public void setTo(GeographicPoint to) {
+	public void setTo(MapNode to) {
 		this.to = to;
 	}
 	
