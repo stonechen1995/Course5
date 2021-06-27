@@ -8,7 +8,7 @@ import geography.GeographicPoint;
  * @author Stone
  *
  */
-public class Edge {
+public class MapEdge {
 	
 	private GeographicPoint from;
 	private GeographicPoint to;
@@ -16,7 +16,7 @@ public class Edge {
 	private String roadType;
 	private double length;
 	
-	public Edge(GeographicPoint from, GeographicPoint to, String roadName,
+	public MapEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 		
 		addEdge(from, to, roadName, roadType, length);
@@ -26,7 +26,7 @@ public class Edge {
 			String roadType, double length) throws IllegalArgumentException {
 		//TODO: Implement this method in WEEK 3
 		if (from == null || to == null || roadName == null || roadType == null || length < 0)
-			throw new IllegalArgumentException("Invalid arguments in Edge.addEdge() method");
+			throw new IllegalArgumentException("Invalid arguments in MapEdge.addEdge() method");
 		
 		this.from = from;
 		this.to = to;
@@ -37,15 +37,15 @@ public class Edge {
 	
 	@Override
 	public boolean equals(final Object other) {
-		if (!(other instanceof Edge)) throw new IllegalArgumentException("Invalid argument in Edge.equals() method");
+		if (!(other instanceof MapEdge)) throw new IllegalArgumentException("Invalid argument in MapEdge.equals() method");
 		
-		if (this.from.getX() == ((Edge) other).from.getX() &&
-			this.from.getY() == ((Edge) other).from.getY() &&
-			this.to.getX() == ((Edge) other).to.getX() &&
-			this.to.getY() == ((Edge) other).to.getY()&&
-			this.roadName == ((Edge) other).roadName && 
-			this.roadType == ((Edge) other).roadType &&
-			this.length == ((Edge) other).length) {
+		if (this.from.getX() == ((MapEdge) other).from.getX() &&
+			this.from.getY() == ((MapEdge) other).from.getY() &&
+			this.to.getX() == ((MapEdge) other).to.getX() &&
+			this.to.getY() == ((MapEdge) other).to.getY()&&
+			this.roadName == ((MapEdge) other).roadName && 
+			this.roadType == ((MapEdge) other).roadType &&
+			this.length == ((MapEdge) other).length) {
 			return true;
 		}
 		return false;

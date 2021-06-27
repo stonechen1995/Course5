@@ -32,7 +32,7 @@ import util.GraphLoader;
  */
 public class MapGraph {
 	//TODO: Add your member variables here in WEEK 3
-	private HashMap<GeographicPoint, HashSet<Edge>> adjListMap; //HashSet<Edge> includes outgoing edges
+	private HashMap<GeographicPoint, HashSet<MapEdge>> adjListMap; //HashSet<MapEdge> includes outgoing edges
 
 	/** 
 	 * Create a new empty MapGraph 
@@ -40,7 +40,7 @@ public class MapGraph {
 	public MapGraph()
 	{
 		// TODO: Implement in this constructor in WEEK 3
-		adjListMap = new HashMap<GeographicPoint, HashSet<Edge>>();
+		adjListMap = new HashMap<GeographicPoint, HashSet<MapEdge>>();
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class MapGraph {
 	{
 		// TODO: Implement this method in WEEK 3
 		if (!adjListMap.containsKey(location)) {
-			adjListMap.put(location, new HashSet<Edge>());
+			adjListMap.put(location, new HashSet<MapEdge>());
 			return true;
 		}
 		return false;
@@ -116,7 +116,7 @@ public class MapGraph {
 				|| length < 0)
 			throw new IllegalArgumentException("Invalid arguments");
 
-		Edge edge = new Edge(from, to, roadName, roadType, length);
+		MapEdge edge = new MapEdge(from, to, roadName, roadType, length);
 		adjListMap.get(from).add(edge);
 	}
 	
@@ -187,7 +187,7 @@ public class MapGraph {
 	private void enQueueNeighborsOfNode(GeographicPoint node, HashMap<GeographicPoint, GeographicPoint> parent,
 			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue
 			) {
-		for (Edge eg : adjListMap.get(node)) {
+		for (MapEdge eg : adjListMap.get(node)) {
 			if (!visited.contains(eg.getTo())) {
 				GeographicPoint destination = eg.getTo();
 				queue.add(destination);
@@ -242,7 +242,6 @@ public class MapGraph {
 
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
-		
 		
 		return null;
 	}
