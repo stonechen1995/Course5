@@ -47,8 +47,8 @@ public class MapNode implements Comparable<MapNode> {
 		return this.location;
 	}
 	
-	public Set<GeographicPoint> getNeighbors() {
-		Set<GeographicPoint> result = new HashSet<GeographicPoint>();
+	public Set<MapNode> getNeighbors() {
+		Set<MapNode> result = new HashSet<MapNode>();
 		for (MapEdge edge : edgeSet) {
 			result.add(edge.getTo());
 		}
