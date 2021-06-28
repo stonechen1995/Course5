@@ -245,7 +245,11 @@ public class MapGraph {
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
 		
-//		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>();
+		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>();
+		HashSet<MapNode> visited = new HashSet<MapNode>();
+		HashMap<GeographicPoint, GeographicPoint> parentMap = new HashMap<GeographicPoint, GeographicPoint> ();
+		
+		
 		
 		return null;
 	}

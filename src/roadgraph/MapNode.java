@@ -12,17 +12,22 @@ import geography.GeographicPoint;
  * @author Stone
  *
  */
-public class MapNode extends GeographicPoint implements Comparable<MapNode> {
+public class MapNode implements Comparable<MapNode> {
 	
 	//fields
+	private GeographicPoint location;
 	private HashSet<MapEdge> edgeSet;
-	private double distance;
+	private double distance = Double.MAX_VALUE;
 	
 	//Constructors
-	public MapNode(double latitude, double longitude) {
-		super(latitude, longitude);
+	public MapNode(GeographicPoint location) {
+		this.location = location;
 		edgeSet = new HashSet<MapEdge>();
-		distance = java.lang.Double.MAX_VALUE;
+	}
+	
+	public MapNode(GeographicPoint location, double distacne) {
+		this(location);
+		this.distance = distacne;
 	}
 	
 	//Methods
@@ -36,6 +41,10 @@ public class MapNode extends GeographicPoint implements Comparable<MapNode> {
 	
 	public Set<MapEdge> getEdges() {
 		return this.edgeSet;
+	}
+	
+	public GeographicPoint getLocation() {
+		return this.location;
 	}
 	
 	public Set<GeographicPoint> getNeighbors() {
@@ -82,6 +91,6 @@ public class MapNode extends GeographicPoint implements Comparable<MapNode> {
 		
 		MapNode node = (MapNode) obj;
 		
-		return false;
+		return node.location.equals(this.location);
 	}
 }
