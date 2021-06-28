@@ -32,7 +32,8 @@ import util.GraphLoader;
  */
 public class MapGraph {
 	//TODO: Add your member variables here in WEEK 3
-	private HashMap<GeographicPoint, HashSet<MapEdge>> adjListMap; //HashSet<MapEdge> includes outgoing edges
+	private HashMap<GeographicPoint, MapNode> nodeMap;
+//	private HashMap<GeographicPoint, HashSet<MapEdge>> adjListMap; //HashSet<MapEdge> includes outgoing edges
 	
 	
 	/** 
@@ -41,7 +42,7 @@ public class MapGraph {
 	public MapGraph()
 	{
 		// TODO: Implement in this constructor in WEEK 3
-		adjListMap = new HashMap<GeographicPoint, HashSet<MapEdge>>();
+		nodeMap = new HashMap<GeographicPoint, MapNode>();
 	}
 	
 	/**
@@ -51,7 +52,7 @@ public class MapGraph {
 	public int getNumVertices()
 	{
 		//TODO: Implement this method in WEEK 3
-		return adjListMap.size();
+		return nodeMap.size();
 	}
 	
 	/**
@@ -61,7 +62,7 @@ public class MapGraph {
 	public Set<GeographicPoint> getVertices()
 	{
 		//TODO: Implement this method in WEEK 3 
-		return adjListMap.keySet();
+		return nodeMap.keySet();
 
 	}
 	
@@ -71,10 +72,9 @@ public class MapGraph {
 	 */
 	public int getNumEdges()
 	{
-		//TODO: Implement this method in WEEK 3
 		int num = 0;
-		for (GeographicPoint gp : adjListMap.keySet()) {
-			num += adjListMap.get(gp).size();
+		for (MapNode mn : nodeMap.values()) {
+			num += mn.getEdges().size();
 		}
 		return num;
 	}
@@ -91,8 +91,8 @@ public class MapGraph {
 	public boolean addVertex(GeographicPoint location)
 	{
 		// TODO: Implement this method in WEEK 3
-		if (!adjListMap.containsKey(location)) {
-			adjListMap.put(location, new HashSet<MapEdge>());
+		if (!nodeMap.containsKey(location)) {
+			nodeMap.put(location, new MapNode(location));
 			return true;
 		}
 		return false;
@@ -113,13 +113,17 @@ public class MapGraph {
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 		//TODO: Implement this method in WEEK 3
-		if (!adjListMap.containsKey(from) || !adjListMap.containsKey(to) ||
+		
+		MapNode fromNode = nodeMap.get(from);
+		MapNode toNode = nodeMap.get(to);
+		
+		if (!nodeMap.containsKey(from) || !nodeMap.containsKey(to) ||
 				from == null || to == null || roadName == null || roadType == null
 				|| length < 0)
 			throw new IllegalArgumentException("Invalid arguments");
 
-		MapEdge edge = new MapEdge(from, to, roadName, roadType, length);
-		adjListMap.get(from).add(edge);
+		MapEdge edge = new MapEdge(fromNode, toNode, roadName, roadType, length);
+		nodeMap.get(from).addEdge(edge);
 	}
 	
 	/**
@@ -128,7 +132,7 @@ public class MapGraph {
 	 * @return true if contained; false if not contained.
 	 */
 	public boolean containsVertex(GeographicPoint point) {
-		if (adjListMap.containsKey(point)) 
+		if (nodeMap.containsKey(point)) 
 			return true;
 		return false;
 	}
@@ -189,9 +193,11 @@ public class MapGraph {
 	private void enQueueNeighborsOfNode(GeographicPoint node, HashMap<GeographicPoint, GeographicPoint> parent,
 			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue
 			) {
-		for (MapEdge eg : adjListMap.get(node)) {
-			if (!visited.contains(eg.getTo())) {
-				GeographicPoint destination = eg.getTo();
+		
+		MapNode mn = nodeMap.get(node);
+		for (MapEdge eg : mn.getEdges()) {
+			if (!visited.contains(eg.getTo().getLocation())) {
+				GeographicPoint destination = eg.getTo().getLocation();
 				queue.add(destination);
 				visited.add(destination);
 				parent.put(destination, node);
@@ -289,7 +295,7 @@ public class MapGraph {
 	/** Print the graph
 	 */
 	public void printGraph() {
-		for (GeographicPoint gp : adjListMap.keySet()) {
+		for (GeographicPoint gp : nodeMap.keySet()) {
 			
 		}
 	}

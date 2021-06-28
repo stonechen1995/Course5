@@ -10,19 +10,19 @@ import geography.GeographicPoint;
  */
 public class MapEdge {
 	
-	private GeographicPoint from;
-	private GeographicPoint to;
+	private MapNode from;
+	private MapNode to;
 	private String roadName;
 	private String roadType;
 	private double length;
 	
-	public MapEdge(GeographicPoint from, GeographicPoint to, String roadName,
+	public MapEdge(MapNode from, MapNode to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 		
 		addEdge(from, to, roadName, roadType, length);
 	}
 	
-	private void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
+	private void addEdge(MapNode from, MapNode to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 		//TODO: Implement this method in WEEK 3
 		if (from == null || to == null || roadName == null || roadType == null || length < 0)
@@ -39,10 +39,10 @@ public class MapEdge {
 	public boolean equals(final Object other) {
 		if (!(other instanceof MapEdge)) throw new IllegalArgumentException("Invalid argument in MapEdge.equals() method");
 		
-		if (this.from.getX() == ((MapEdge) other).from.getX() &&
-			this.from.getY() == ((MapEdge) other).from.getY() &&
-			this.to.getX() == ((MapEdge) other).to.getX() &&
-			this.to.getY() == ((MapEdge) other).to.getY()&&
+		if (this.from.getLocation().getX() == ((MapEdge) other).from.getLocation().getX() &&
+			this.from.getLocation().getY() == ((MapEdge) other).from.getLocation().getY() &&
+			this.to.getLocation().getX() == ((MapEdge) other).to.getLocation().getX() &&
+			this.to.getLocation().getY() == ((MapEdge) other).to.getLocation().getY()&&
 			this.roadName == ((MapEdge) other).roadName && 
 			this.roadType == ((MapEdge) other).roadType &&
 			this.length == ((MapEdge) other).length) {
@@ -56,11 +56,11 @@ public class MapEdge {
         return Objects.hash(from, to, roadName, roadType, length);
     }
 	
-	public GeographicPoint getFrom() {
+	public MapNode getFrom() {
 		return from;
 	}
 	
-	public GeographicPoint getTo() {
+	public MapNode getTo() {
 		return to;
 	}
 	
@@ -76,11 +76,11 @@ public class MapEdge {
 		return length;
 	}
 	
-	public void setFrom(GeographicPoint from) {
+	public void setFrom(MapNode from) {
 		this.from = from;
 	}
 	
-	public void setTo(GeographicPoint to) {
+	public void setTo(MapNode to) {
 		this.to = to;
 	}
 	
