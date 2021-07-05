@@ -4,6 +4,7 @@
 package roadgraph;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import geography.GeographicPoint;
@@ -77,6 +78,16 @@ public class MapNode implements Comparable<MapNode> {
 		
 		return (int) (this.distance - node.distance);
 	}
+
+	/** Because we compare nodes using their location, we also 
+	 * may use their location for HashCode.
+	 * @return The HashCode for this node, which is the HashCode for the 
+	 * underlying point
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(location, distance);
+	}
 	
 	/** Returns whether two nodes are equal.
 	 * Nodes are considered equal if their locations are the same, 
@@ -91,6 +102,9 @@ public class MapNode implements Comparable<MapNode> {
 		
 		MapNode node = (MapNode) obj;
 		
-		return node.location.equals(this.location);
+		return node.location.equals(this.location) && 
+				this.distance == node.distance;
 	}
+	
+	
 }

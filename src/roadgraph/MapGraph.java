@@ -190,14 +190,31 @@ public class MapGraph {
 	 * @param visited The Visited HashSet is to log all nodes that have been enqueued to queue
 	 * @param queue 
 	 */
-	private void enQueueNeighborsOfNode(GeographicPoint node, HashMap<GeographicPoint, GeographicPoint> parent,
-			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue
+//	private void enQueueNeighborsOfNode(GeographicPoint node, HashMap<GeographicPoint, GeographicPoint> parent,
+//			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue
+//			) {
+//		MapNode mn = nodeMap.get(node);
+//		for (MapEdge eg : mn.getEdges()) {
+//			if (!visited.contains(eg.getTo().getLocation())) {
+//				GeographicPoint destination = eg.getTo().getLocation();
+//				queue.add(destination);
+//				visited.add(destination);
+//				parent.put(destination, node);
+//			}
+//		}
+//	}
+	private <E> void enQueueNeighborsOfNode(E node, HashMap<E, E> parent,
+			HashSet<E> visited, Queue<E> queue
 			) {
-		
 		MapNode mn = nodeMap.get(node);
 		for (MapEdge eg : mn.getEdges()) {
 			if (!visited.contains(eg.getTo().getLocation())) {
-				GeographicPoint destination = eg.getTo().getLocation();
+				E destination = null;
+				if (node instanceof GeographicPoint) 
+					destination = (E) eg.getTo().getLocation();
+				else if (node instanceof MapNode)
+					destination = (E) eg.getTo();
+
 				queue.add(destination);
 				visited.add(destination);
 				parent.put(destination, node);
@@ -243,21 +260,59 @@ public class MapGraph {
 	 * @return The list of intersections that form the shortest path from 
 	 *   start to goal (including both start and goal).
 	 */
+//	public List<GeographicPoint> bfs(GeographicPoint start, 
+//			GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
+//	{
+//		// TODO: Implement this method in WEEK 3
+//		// Hook for visualization.  See writeup.
+//		if (start == null || goal == null) return null;
+//
+//		Queue<GeographicPoint> queue = new LinkedList<GeographicPoint>();
+//		HashSet<GeographicPoint> visited = new HashSet<GeographicPoint>();
+//		HashMap<GeographicPoint, GeographicPoint> parentMap = new HashMap<GeographicPoint, GeographicPoint>();
+//		queue.add(start);
+//		while (!queue.isEmpty()) {
+//			GeographicPoint curr = queue.remove();
+//			visited.add(curr);
+//			nodeSearched.accept(curr);
+//
+//			if(curr.equals(goal))
+//				return constructPath(start, curr, parentMap);
+//
+//			enQueueNeighborsOfNode(curr, parentMap, visited, queue);
+//		}
+//		return null;
+//	}
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 4
-
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
-		
+		if (start == null || goal == null) return null;
+
 		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>();
 		HashSet<MapNode> visited = new HashSet<MapNode>();
 		HashMap<GeographicPoint, GeographicPoint> parentMap = new HashMap<GeographicPoint, GeographicPoint> ();
+		MapNode startNode = nodeMap.get(start);
 		
-		
-		
-		return null;
+		pq.add(startNode);
+		while (!pq.isEmpty()) {
+			MapNode curr = pq.remove();
+			if (curr.getLocation().equals(goal)) {
+				break;
+			}
+			if (!visited.contains(curr)) {
+				visited.add(curr);
+				for (MapEdge eg : curr.getEdges()) {
+					MapNode next = eg.getTo();
+					next.setDistance(curr.getDistance() + eg.getLength());
+					pq.add(next);
+					parentMap.put(next.getLocation(), curr.getLocation());
+				}
+			}
+		}
+		return constructPath(start, goal, parentMap);
 	}
 
 	/** Find the path from start to goal using A-Star search
@@ -327,7 +382,7 @@ public class MapGraph {
 		 * the Week 3 End of Week Quiz, EVEN IF you score 100% on the 
 		 * programming assignment.
 		 */
-//		
+		
 //		MapGraph simpleTestMap = new MapGraph();
 //		GraphLoader.loadRoadMap("data/testdata/simpletest.map", simpleTestMap);
 //		
