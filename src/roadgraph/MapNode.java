@@ -105,6 +105,11 @@ public class MapNode implements Comparable<MapNode> {
 		return node.location.equals(this.location) && 
 				this.distance == node.distance;
 	}
+
+	@Override
+	public String toString() {
+		return "MapNode [location=" + location + ", distance=" + distance + "]";
+	}
 	
 	
 }

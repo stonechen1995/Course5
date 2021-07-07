@@ -189,20 +189,20 @@ public class MapGraph {
 	 * @param parent The parent map to track parent from chile
 	 * @param visited The Visited HashSet is to log all nodes that have been enqueued to queue
 	 * @param queue 
-	 */
-//	private void enQueueNeighborsOfNode(GeographicPoint node, HashMap<GeographicPoint, GeographicPoint> parent,
-//			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue
-//			) {
-//		MapNode mn = nodeMap.get(node);
-//		for (MapEdge eg : mn.getEdges()) {
-//			if (!visited.contains(eg.getTo().getLocation())) {
-//				GeographicPoint destination = eg.getTo().getLocation();
-//				queue.add(destination);
-//				visited.add(destination);
-//				parent.put(destination, node);
-//			}
-//		}
-//	}
+	 *
+	private void enQueueNeighborsOfNode(GeographicPoint node, HashMap<GeographicPoint, GeographicPoint> parent,
+			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue
+			) {
+		MapNode mn = nodeMap.get(node);
+		for (MapEdge eg : mn.getEdges()) {
+			if (!visited.contains(eg.getTo().getLocation())) {
+				GeographicPoint destination = eg.getTo().getLocation();
+				queue.add(destination);
+				visited.add(destination);
+				parent.put(destination, node);
+			}
+		}
+	}*/
 	private <E> void enQueueNeighborsOfNode(E node, HashMap<E, E> parent,
 			HashSet<E> visited, Queue<E> queue
 			) {
@@ -298,6 +298,7 @@ public class MapGraph {
 		
 		pq.add(startNode);
 		while (!pq.isEmpty()) {
+			printQueue(pq);
 			MapNode curr = pq.remove();
 			if (curr.getLocation().equals(goal)) {
 				break;
@@ -313,6 +314,12 @@ public class MapGraph {
 			}
 		}
 		return constructPath(start, goal, parentMap);
+	}
+	
+	private <T> void printQueue(Queue<T> queue) {
+		for (T node : queue) {
+			System.out.println(node);
+		}
 	}
 
 	/** Find the path from start to goal using A-Star search
@@ -366,16 +373,16 @@ public class MapGraph {
 		System.out.println("DONE.");
 		
 		// You can use this method for testing.  
-		MapGraph simpleTestMap = new MapGraph();
-		GraphLoader.loadRoadMap("data/testdata/simpletest.map", simpleTestMap);
-		GeographicPoint testStart = new GeographicPoint(1.0, 1.0);
-		GeographicPoint testEnd = new GeographicPoint(8.0, -1.0);
-		
-		System.out.println("Test A using simpletest: Dijkstra should be 9 and AStar should be 5");
-		List<GeographicPoint> list = simpleTestMap.bfs(testStart, testEnd);
-		for (GeographicPoint node : list) {
-			System.out.println(node.getX() + ", " + node.getY());
-		}
+//		MapGraph simpleTestMap = new MapGraph();
+//		GraphLoader.loadRoadMap("data/testdata/simpletest.map", simpleTestMap);
+//		GeographicPoint testStart = new GeographicPoint(1.0, 1.0);
+//		GeographicPoint testEnd = new GeographicPoint(8.0, -1.0);
+//		
+//		System.out.println("Test A using simpletest: Dijkstra should be 9 and AStar should be 5");
+//		List<GeographicPoint> list = simpleTestMap.bfs(testStart, testEnd);
+//		for (GeographicPoint node : list) {
+//			System.out.println(node.getX() + ", " + node.getY());
+//		}
 		
 		
 		/* Here are some test cases you should try before you attempt 
@@ -383,24 +390,24 @@ public class MapGraph {
 		 * programming assignment.
 		 */
 		
-//		MapGraph simpleTestMap = new MapGraph();
-//		GraphLoader.loadRoadMap("data/testdata/simpletest.map", simpleTestMap);
-//		
-//		GeographicPoint testStart = new GeographicPoint(1.0, 1.0);
-//		GeographicPoint testEnd = new GeographicPoint(8.0, -1.0);
-//		
-//		System.out.println("Test 0 using simpletest: Dijkstra should be 9 and AStar should be 5");
-//		List<GeographicPoint> list = simpleTestMap.bfs(testStart, testEnd);
-//		for (GeographicPoint node : list) {
-//			System.out.println(node.getX() + ", " + node.getY());
-//		}
-//		
-//		
-//		System.out.println("Test 1 using simpletest: Dijkstra should be 9 and AStar should be 5");
-//		List<GeographicPoint> testroute = simpleTestMap.dijkstra(testStart,testEnd);
-//		List<GeographicPoint> testroute2 = simpleTestMap.aStarSearch(testStart,testEnd);
-//		
-//		
+		MapGraph simpleTestMap = new MapGraph();
+		GraphLoader.loadRoadMap("data/testdata/simpletest.map", simpleTestMap);
+		
+		GeographicPoint testStart = new GeographicPoint(1.0, 1.0);
+		GeographicPoint testEnd = new GeographicPoint(8.0, -1.0);
+		
+		System.out.println("Test 0 using simpletest: Dijkstra should be 9 and AStar should be 5");
+		List<GeographicPoint> list = simpleTestMap.bfs(testStart, testEnd);
+		for (GeographicPoint node : list) {
+			System.out.println(node.getX() + ", " + node.getY());
+		}
+		
+		
+		System.out.println("Test 1 using simpletest: Dijkstra should be 9 and AStar should be 5");
+		List<GeographicPoint> testroute = simpleTestMap.dijkstra(testStart,testEnd);
+		List<GeographicPoint> testroute2 = simpleTestMap.aStarSearch(testStart,testEnd);
+		
+		
 //		MapGraph testMap = new MapGraph();
 //		GraphLoader.loadRoadMap("data/maps/utc.map", testMap);
 //		
