@@ -10,6 +10,7 @@ package roadgraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -117,7 +118,7 @@ public class MapGraph {
 		MapNode fromNode = nodeMap.get(from);
 		MapNode toNode = nodeMap.get(to);
 		
-		if (!nodeMap.containsKey(from) || !nodeMap.containsKey(to) ||
+		if (!this.containsVertex(from) || !this.containsVertex(to) ||
 				from == null || to == null || roadName == null || roadType == null
 				|| length < 0)
 			throw new IllegalArgumentException("Invalid arguments");
@@ -203,6 +204,7 @@ public class MapGraph {
 			}
 		}
 	}*/
+	@SuppressWarnings("unchecked")
 	private <E> void enQueueNeighborsOfNode(E node, HashMap<E, E> parent,
 			HashSet<E> visited, Queue<E> queue
 			) {
@@ -295,11 +297,12 @@ public class MapGraph {
 		HashSet<MapNode> visited = new HashSet<MapNode>();
 		HashMap<GeographicPoint, GeographicPoint> parentMap = new HashMap<GeographicPoint, GeographicPoint> ();
 		MapNode startNode = nodeMap.get(start);
+		startNode.setDistance(0);
 		
 		pq.add(startNode);
 		while (!pq.isEmpty()) {
 			printQueue(pq);
-			MapNode curr = pq.remove();
+			MapNode curr = pq.poll();
 			if (curr.getLocation().equals(goal)) {
 				break;
 			}
@@ -307,6 +310,7 @@ public class MapGraph {
 				visited.add(curr);
 				for (MapEdge eg : curr.getEdges()) {
 					MapNode next = eg.getTo();
+//					System.out.println("eg.getLength():" + eg.getLength());
 					next.setDistance(curr.getDistance() + eg.getLength());
 					pq.add(next);
 					parentMap.put(next.getLocation(), curr.getLocation());
@@ -317,8 +321,9 @@ public class MapGraph {
 	}
 	
 	private <T> void printQueue(Queue<T> queue) {
+		System.out.println("print out the queue");
 		for (T node : queue) {
-			System.out.println(node);
+				System.out.println(node);
 		}
 	}
 
@@ -357,9 +362,7 @@ public class MapGraph {
 	/** Print the graph
 	 */
 	public void printGraph() {
-		for (GeographicPoint gp : nodeMap.keySet()) {
-			
-		}
+		
 	}
 	
 	

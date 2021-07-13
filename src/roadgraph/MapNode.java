@@ -3,6 +3,7 @@
  */
 package roadgraph;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -75,8 +76,12 @@ public class MapNode implements Comparable<MapNode> {
 	public int compareTo(MapNode node) {
 		if (!(node instanceof MapNode) || node == null) 
 			throw new IllegalArgumentException();
+//		System.out.println("this.distance: " + this.distance);
+		System.out.println("node.distance: " + node.distance);
 		
-		return (int) (this.distance - node.distance);
+		if (this.distance - node.distance > 0) return 1;
+		else if (this.distance - node.distance < 0) return -1;
+		else return 0;
 	}
 
 	/** Because we compare nodes using their location, we also 
@@ -110,6 +115,34 @@ public class MapNode implements Comparable<MapNode> {
 	public String toString() {
 		return "MapNode [location=" + location + ", distance=" + distance + "]";
 	}
+
+	/**
+	 * The instance of this class is compared by the field "distance"
+	 * @param node is another MapNode to be compared with this object.
+	 * @return positive number if the distance of this object is larger 
+	 * than the node passed in as an argument.
+	 * @return negative number if the distance of this object is less 
+	 * than the node passed in as an argument.
+	 */
+//	@Override
+//	public int compare(MapNode node1, MapNode node2) {
+//		// TODO Auto-generated method stub
+//		if (!(node1 instanceof MapNode) || node1 == null ||
+//			!(node2 instanceof MapNode) || node2 == null) 
+//			throw new IllegalArgumentException();
+//
+//		return node1.compareTo(node2);
+//	}
 	
 	
 }
+
+//class ComparatorByDistance implements Comparator<String> {
+//    public int compare(String str1, String str2) {
+//        String first_Str;
+//        String second_Str;
+//        first_Str = str1;
+//        second_Str = str2;
+//        return second_Str.compareTo(first_Str);
+//    }
+//}
