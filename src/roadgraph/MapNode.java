@@ -77,7 +77,7 @@ public class MapNode implements Comparable<MapNode> {
 		if (!(node instanceof MapNode) || node == null) 
 			throw new IllegalArgumentException();
 //		System.out.println("this.distance: " + this.distance);
-		System.out.println("node.distance: " + node.distance);
+//		System.out.println("node.distance: " + node.distance);
 		
 		if (this.distance - node.distance > 0) return 1;
 		else if (this.distance - node.distance < 0) return -1;

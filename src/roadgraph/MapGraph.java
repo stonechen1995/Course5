@@ -301,7 +301,7 @@ public class MapGraph {
 		
 		pq.add(startNode);
 		while (!pq.isEmpty()) {
-			printQueue(pq);
+			printQueue(new PriorityQueue(pq));
 			MapNode curr = pq.poll();
 			if (curr.getLocation().equals(goal)) {
 				break;
@@ -320,10 +320,17 @@ public class MapGraph {
 		return constructPath(start, goal, parentMap);
 	}
 	
+	/**
+	 * CAUTION: The input argument needs to be a NEW instance as this method will
+	 * remove each element at head position while its execution.
+	 * @param <T>
+	 * @param queue
+	 */
 	private <T> void printQueue(Queue<T> queue) {
 		System.out.println("print out the queue");
-		for (T node : queue) {
-				System.out.println(node);
+		while (!queue.isEmpty()) {
+			T node = queue.remove();
+			System.out.println(node);
 		}
 	}
 
