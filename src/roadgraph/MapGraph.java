@@ -142,19 +142,6 @@ public class MapGraph {
 	 * 
 	 * @param start The starting location
 	 * @param goal The goal location
-	 * @return The list of intersections that form the shortest (unweighted)
-	 *   path from start to goal (including both start and goal).
-	 */
-	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint goal) {
-		// Dummy variable for calling the search algorithms
-        Consumer<GeographicPoint> temp = (x) -> {};
-        return bfs(start, goal, temp);
-	}
-	
-	/** Find the path from start to goal using breadth first search
-	 * 
-	 * @param start The starting location
-	 * @param goal The goal location
 	 * @param nodeSearched A hook for visualization.  See assignment instructions for how to use it.
 	 * @return The list of intersections that form the shortest (unweighted)
 	 *   path from start to goal (including both start and goal).
@@ -165,7 +152,7 @@ public class MapGraph {
 		// TODO: Implement this method in WEEK 3
 		// Hook for visualization.  See writeup.
 		if (start == null || goal == null) return null;
-
+	
 		Queue<GeographicPoint> queue = new LinkedList<GeographicPoint>();
 		HashSet<GeographicPoint> visited = new HashSet<GeographicPoint>();
 		HashMap<GeographicPoint, GeographicPoint> parentMap = new HashMap<GeographicPoint, GeographicPoint>();
@@ -181,6 +168,19 @@ public class MapGraph {
 			enQueueNeighborsOfNode(curr, parentMap, visited, queue);
 		}
 		return null;
+	}
+
+	/** Find the path from start to goal using breadth first search
+	 * 
+	 * @param start The starting location
+	 * @param goal The goal location
+	 * @return The list of intersections that form the shortest (unweighted)
+	 *   path from start to goal (including both start and goal).
+	 */
+	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint goal) {
+		// Dummy variable for calling the search algorithms
+        Consumer<GeographicPoint> temp = (x) -> {};
+        return bfs(start, goal, temp);
 	}
 	
 	/** 
@@ -285,6 +285,7 @@ public class MapGraph {
 //		}
 //		return null;
 //	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
@@ -302,24 +303,25 @@ public class MapGraph {
 		pq.add(startNode);
 		int count = 0;
 		while (!pq.isEmpty()) {
+			System.out.println("");
 			printQueue(new PriorityQueue(pq));
 			MapNode curr = pq.remove();
-			System.out.println("head node: " + curr.getLocation() + " --- chekced out");
+			System.out.println(curr.getLocation() + " --- head node chekced out");
 			if (curr.getLocation().equals(goal)) {
 				System.out.println("find the goal");
 				break;
 			}
 			if (!visited.contains(curr)) {
 				visited.add(curr);
-				System.out.println(curr.getLocation() + " --- added to visited");
+				System.out.println(curr.getLocation() + " --- head node added to visited");
 				for (MapEdge eg : curr.getEdges()) {
 					MapNode next = eg.getTo();
 //					System.out.println("eg.getLength():" + eg.getLength());
 					next.setDistance(curr.getDistance() + eg.getLength());
 					pq.add(next);
-					System.out.println("Neighbor: " + next.getLocation() + " --- added to pq");
+					System.out.println(next.getLocation() + " --- neighbor added to pq");
 					parentMap.put(next.getLocation(), curr.getLocation());
-					System.out.println("Neighbor added to parentMap");
+					System.out.println(next.getLocation() + " --- neighbor added to parentMap");
 				}
 			}
 			count ++;
@@ -335,11 +337,12 @@ public class MapGraph {
 	 * @param queue
 	 */
 	private <T> void printQueue(Queue<T> queue) {
-		System.out.println("print out the queue");
+		System.out.println("print out the queue:");
 		while (!queue.isEmpty()) {
 			T node = queue.remove();
-			System.out.println(node);
+			System.out.println("    " + node);
 		}
+		System.out.println("print out the queue completed");
 	}
 
 	/** Find the path from start to goal using A-Star search
