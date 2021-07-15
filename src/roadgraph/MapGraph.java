@@ -300,22 +300,30 @@ public class MapGraph {
 		startNode.setDistance(0);
 		
 		pq.add(startNode);
+		int count = 0;
 		while (!pq.isEmpty()) {
 			printQueue(new PriorityQueue(pq));
-			MapNode curr = pq.poll();
+			MapNode curr = pq.remove();
+			System.out.println("head node: " + curr.getLocation() + " --- chekced out");
 			if (curr.getLocation().equals(goal)) {
+				System.out.println("find the goal");
 				break;
 			}
 			if (!visited.contains(curr)) {
 				visited.add(curr);
+				System.out.println(curr.getLocation() + " --- added to visited");
 				for (MapEdge eg : curr.getEdges()) {
 					MapNode next = eg.getTo();
 //					System.out.println("eg.getLength():" + eg.getLength());
 					next.setDistance(curr.getDistance() + eg.getLength());
 					pq.add(next);
+					System.out.println("Neighbor: " + next.getLocation() + " --- added to pq");
 					parentMap.put(next.getLocation(), curr.getLocation());
+					System.out.println("Neighbor added to parentMap");
 				}
 			}
+			count ++;
+			if(count > 4) break;
 		}
 		return constructPath(start, goal, parentMap);
 	}
