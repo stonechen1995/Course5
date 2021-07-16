@@ -303,29 +303,27 @@ public class MapGraph {
 		pq.add(startNode);
 		int count = 0;
 		while (!pq.isEmpty()) {
-			System.out.println("");
-			printQueue(new PriorityQueue(pq));
+//			System.out.println("");
+//			printQueue(new PriorityQueue(pq));
 			MapNode curr = pq.remove();
-			System.out.println(curr.getLocation() + " --- head node chekced out");
+//			System.out.println(curr.getLocation() + " --- head node chekced out");
 			if (curr.getLocation().equals(goal)) {
-				System.out.println("find the goal");
+//				System.out.println("find the goal");
 				break;
 			}
 			if (!visited.contains(curr)) {
 				visited.add(curr);
-				System.out.println(curr.getLocation() + " --- head node added to visited");
+//				System.out.println(curr.getLocation() + " --- head node added to visited");
 				for (MapEdge eg : curr.getEdges()) {
 					MapNode next = eg.getTo();
-//					System.out.println("eg.getLength():" + eg.getLength());
-					next.setDistance(curr.getDistance() + eg.getLength());
-					pq.add(next);
-					System.out.println(next.getLocation() + " --- neighbor added to pq");
-					parentMap.put(next.getLocation(), curr.getLocation());
-					System.out.println(next.getLocation() + " --- neighbor added to parentMap");
+					if (!visited.contains(next)) {
+						next.setDistance(curr.getDistance() + eg.getLength());
+						pq.add(next);
+//						System.out.println(next.getLocation() + " --- neighbor added to pq");
+						parentMap.put(next.getLocation(), curr.getLocation());
+					}
 				}
 			}
-			count ++;
-			if(count > 4) break;
 		}
 		return constructPath(start, goal, parentMap);
 	}
@@ -338,9 +336,12 @@ public class MapGraph {
 	 */
 	private <T> void printQueue(Queue<T> queue) {
 		System.out.println("print out the queue:");
+		int count = 0;
 		while (!queue.isEmpty()) {
 			T node = queue.remove();
-			System.out.println("    " + node);
+			System.out.println("  " + node);
+//			count++;
+			if (count >= 1) break;
 		}
 		System.out.println("print out the queue completed");
 	}
