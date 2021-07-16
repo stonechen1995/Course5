@@ -185,41 +185,34 @@ public class MapGraph {
 	
 	/** 
 	 * Enqueue all the neighbor nodes of the current node to the queue. Meanwhile, all neighbor nodes will be
-	 * added to the visited HashSet and 
+	 * added to the visited HashSet and parentMap HashMap
 	 * @param node The node of which all neighbors ready to be enqueued.
-	 * @param parent The parent map to track parent from chile
+	 * @param parent The parent map is used to track parent from child
 	 * @param visited The Visited HashSet is to log all nodes that have been enqueued to queue
 	 * @param queue 
-	 *
-	private void enQueueNeighborsOfNode(GeographicPoint node, HashMap<GeographicPoint, GeographicPoint> parent,
+	 */
+	private void enQueueNeighborsOfNode(GeographicPoint currNode, HashMap<GeographicPoint, GeographicPoint> parentMap,
 			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue
 			) {
-		MapNode mn = nodeMap.get(node);
+		MapNode mn = nodeMap.get(currNode);
 		for (MapEdge eg : mn.getEdges()) {
-			if (!visited.contains(eg.getTo().getLocation())) {
-				GeographicPoint destination = eg.getTo().getLocation();
-				queue.add(destination);
-				visited.add(destination);
-				parent.put(destination, node);
+			GeographicPoint next = eg.getTo().getLocation();
+			if (!visited.contains(next)) {
+				queue.add(next);
+				visited.add(next);
+				parentMap.put(next, currNode);
 			}
 		}
-	}*/
-	@SuppressWarnings("unchecked")
-	private <E> void enQueueNeighborsOfNode(E node, HashMap<E, E> parent,
-			HashSet<E> visited, Queue<E> queue
+	}
+	private void enQueueNeighborsOfNode(MapNode currNode, HashMap<GeographicPoint, GeographicPoint> parentMap,
+			HashSet<MapNode> visited, Queue<MapNode> queue
 			) {
-		MapNode mn = nodeMap.get(node);
-		for (MapEdge eg : mn.getEdges()) {
-			if (!visited.contains(eg.getTo().getLocation())) {
-				E destination = null;
-				if (node instanceof GeographicPoint) 
-					destination = (E) eg.getTo().getLocation();
-				else if (node instanceof MapNode)
-					destination = (E) eg.getTo();
-
-				queue.add(destination);
-				visited.add(destination);
-				parent.put(destination, node);
+		for (MapEdge eg : currNode.getEdges()) {
+			MapNode next = eg.getTo();
+			if (!visited.contains(next)) {
+				next.setDistance(currNode.getDistance() + eg.getLength());
+				queue.add(next);
+				parentMap.put(next.getLocation(), currNode.getLocation());
 			}
 		}
 	}
@@ -254,38 +247,6 @@ public class MapGraph {
         return dijkstra(start, goal, temp);
 	}
 	
-	/** Find the path from start to goal using Dijkstra's algorithm
-	 * 
-	 * @param start The starting location
-	 * @param goal The goal location
-	 * @param nodeSearched A hook for visualization.  See assignment instructions for how to use it.
-	 * @return The list of intersections that form the shortest path from 
-	 *   start to goal (including both start and goal).
-	 */
-//	public List<GeographicPoint> bfs(GeographicPoint start, 
-//			GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-//	{
-//		// TODO: Implement this method in WEEK 3
-//		// Hook for visualization.  See writeup.
-//		if (start == null || goal == null) return null;
-//
-//		Queue<GeographicPoint> queue = new LinkedList<GeographicPoint>();
-//		HashSet<GeographicPoint> visited = new HashSet<GeographicPoint>();
-//		HashMap<GeographicPoint, GeographicPoint> parentMap = new HashMap<GeographicPoint, GeographicPoint>();
-//		queue.add(start);
-//		while (!queue.isEmpty()) {
-//			GeographicPoint curr = queue.remove();
-//			visited.add(curr);
-//			nodeSearched.accept(curr);
-//
-//			if(curr.equals(goal))
-//				return constructPath(start, curr, parentMap);
-//
-//			enQueueNeighborsOfNode(curr, parentMap, visited, queue);
-//		}
-//		return null;
-//	}
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
@@ -299,49 +260,65 @@ public class MapGraph {
 		HashMap<GeographicPoint, GeographicPoint> parentMap = new HashMap<GeographicPoint, GeographicPoint> ();
 		MapNode startNode = nodeMap.get(start);
 		startNode.setDistance(0);
-		
 		pq.add(startNode);
-		int count = 0;
 		while (!pq.isEmpty()) {
-//			System.out.println("");
-//			printQueue(new PriorityQueue(pq));
 			MapNode curr = pq.remove();
-//			System.out.println(curr.getLocation() + " --- head node chekced out");
 			if (curr.getLocation().equals(goal)) {
-//				System.out.println("find the goal");
+				System.out.println("find the goal");
 				break;
 			}
-			if (!visited.contains(curr)) {
+			visited.add(curr);
+			enQueueNeighborsOfNode(curr, parentMap, visited, pq);
+		}
+		return constructPath(start, goal, parentMap);
+	}
+	
+	public List<GeographicPoint> dijkstra2(GeographicPoint start, 
+			GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
+	{
+		// TODO: Implement this method in WEEK 4
+		// Hook for visualization.  See writeup.
+		//nodeSearched.accept(next.getLocation());
+		if (start == null || goal == null) return null;
+
+		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>();
+		HashSet<MapNode> visited = new HashSet<MapNode>();
+		HashMap<GeographicPoint, GeographicPoint> parentMap = new HashMap<GeographicPoint, GeographicPoint> ();
+		MapNode startNode = nodeMap.get(start);
+		startNode.setDistance(0);
+		pq.add(startNode);
+		while (!pq.isEmpty()) {
+			MapNode curr = pq.remove();
+			if(!visited.contains(curr)) {
 				visited.add(curr);
-//				System.out.println(curr.getLocation() + " --- head node added to visited");
+				if (curr.getLocation().equals(goal)) break;
 				for (MapEdge eg : curr.getEdges()) {
 					MapNode next = eg.getTo();
 					if (!visited.contains(next)) {
+						if (curr.getDistance() + eg.getLength() < next.getDistance()) {
+							parentMap.put(next.getLocation(), curr.getLocation());
+						}
 						next.setDistance(curr.getDistance() + eg.getLength());
 						pq.add(next);
-//						System.out.println(next.getLocation() + " --- neighbor added to pq");
-						parentMap.put(next.getLocation(), curr.getLocation());
 					}
 				}
 			}
 		}
 		return constructPath(start, goal, parentMap);
 	}
-	
+
 	/**
 	 * CAUTION: The input argument needs to be a NEW instance as this method will
 	 * remove each element at head position while its execution.
 	 * @param <T>
 	 * @param queue
 	 */
+	@SuppressWarnings("unused")
 	private <T> void printQueue(Queue<T> queue) {
 		System.out.println("print out the queue:");
-		int count = 0;
 		while (!queue.isEmpty()) {
 			T node = queue.remove();
 			System.out.println("  " + node);
-//			count++;
-			if (count >= 1) break;
 		}
 		System.out.println("print out the queue completed");
 	}

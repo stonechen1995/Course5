@@ -107,8 +107,8 @@ public class MapNode implements Comparable<MapNode> {
 		
 		MapNode node = (MapNode) obj;
 		
-		return node.location.equals(this.location)  ;
-//			&& this.distance == node.distance;
+		return node.location.equals(this.location)
+			&& this.distance == node.distance;
 	}
 
 	@Override
