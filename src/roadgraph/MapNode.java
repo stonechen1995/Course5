@@ -76,10 +76,8 @@ public class MapNode implements Comparable<MapNode> {
 	public int compareTo(MapNode node) {
 		if (!(node instanceof MapNode) || node == null) 
 			throw new IllegalArgumentException();
-//		System.out.println("this.distance: " + this.distance);
-//		System.out.println("node.distance: " + node.distance);
-
-		System.out.println(this.distance + " - " + node.distance + " = " + (this.distance-node.distance));
+//		System.out.println("compareTo(): " + this.location + " - " + node.location + " ");
+//		System.out.println("    " + this.distance + " - " + node.distance + " = " + (this.distance-node.distance));
 		
 		if (this.distance - node.distance > 0) return 1;
 		else if (this.distance - node.distance < 0) return -1;
@@ -109,8 +107,8 @@ public class MapNode implements Comparable<MapNode> {
 		
 		MapNode node = (MapNode) obj;
 		
-		return node.location.equals(this.location) && 
-				this.distance == node.distance;
+		return node.location.equals(this.location)
+			&& this.distance == node.distance;
 	}
 
 	@Override
