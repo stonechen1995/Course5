@@ -192,8 +192,7 @@ public class MapGraph {
 	 * @param queue 
 	 */
 	private void enQueueNeighborsOfNode(GeographicPoint currNode, HashMap<GeographicPoint, GeographicPoint> parentMap,
-			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue
-			) {
+			HashSet<GeographicPoint> visited, Queue<GeographicPoint> queue) {
 		MapNode mn = nodeMap.get(currNode);
 		for (MapEdge eg : mn.getEdges()) {
 			GeographicPoint next = eg.getTo().getLocation();
@@ -205,14 +204,15 @@ public class MapGraph {
 		}
 	}
 	private void enQueueNeighborsOfNode(MapNode currNode, HashMap<GeographicPoint, GeographicPoint> parentMap,
-			HashSet<MapNode> visited, Queue<MapNode> queue
-			) {
+			HashSet<MapNode> visited, Queue<MapNode> queue) {
 		for (MapEdge eg : currNode.getEdges()) {
 			MapNode next = eg.getTo();
 			if (!visited.contains(next)) {
-				next.setDistance(currNode.getDistance() + eg.getLength());
-				queue.add(next);
-				parentMap.put(next.getLocation(), currNode.getLocation());
+				if (currNode.getDistance() + eg.getLength() < next.getDistance()) {
+					next.setDistance(currNode.getDistance() + eg.getLength());
+					queue.add(next);
+					parentMap.put(next.getLocation(), currNode.getLocation());
+				}
 			}
 		}
 	}
@@ -248,11 +248,9 @@ public class MapGraph {
 	}
 	
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
-										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-	{
+			GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
 		// TODO: Implement this method in WEEK 4
 		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
 		if (start == null || goal == null) return null;
 
 		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>();
@@ -263,8 +261,9 @@ public class MapGraph {
 		pq.add(startNode);
 		while (!pq.isEmpty()) {
 			MapNode curr = pq.remove();
+			nodeSearched.accept(curr.getLocation());
 			if (curr.getLocation().equals(goal)) {
-				System.out.println("find the goal");
+//				System.out.println("find the goal");
 				break;
 			}
 			visited.add(curr);
@@ -272,10 +271,8 @@ public class MapGraph {
 		}
 		return constructPath(start, goal, parentMap);
 	}
-	
-	public List<GeographicPoint> dijkstra2(GeographicPoint start, 
-			GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-	{
+	/*public List<GeographicPoint> dijkstra2(GeographicPoint start, 
+			GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
 		// TODO: Implement this method in WEEK 4
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
@@ -305,7 +302,7 @@ public class MapGraph {
 			}
 		}
 		return constructPath(start, goal, parentMap);
-	}
+	}*/
 
 	/**
 	 * CAUTION: The input argument needs to be a NEW instance as this method will
