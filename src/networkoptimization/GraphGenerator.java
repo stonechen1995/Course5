@@ -95,7 +95,7 @@ class GraphGenerator {
 
 		numberOfVertices = numVertices;
 		int requiredNumOfNeighbors = degreePercentage_predefined*numVertices/100;
-		System.out.println("requiredNeighborsNumber = " + requiredNumOfNeighbors);
+//		System.out.println("requiredNeighborsNumber = " + requiredNumOfNeighbors);
 		
 		//generate a connected and cyclic graph first
 		Graph denseGraph = generateConnectedGraph(numVertices, true);
@@ -103,13 +103,15 @@ class GraphGenerator {
 		//generate the rest of the graph.
 		for (int vertexID = 0; vertexID < numVertices; vertexID++) {
 //			System.out.println("verexID = " + vertexID + ": " + denseGraph.getEdgesofNode(vertexID).size() + " < " + requiredNeighborsNumber);
-			while (denseGraph.getEdgesofNode(vertexID).size() < requiredNumOfNeighbors) {
+			int offset = 0;
+			while (denseGraph.getEdgesofNode(vertexID).size() < requiredNumOfNeighbors - offset) {
 				int otherNode = generateRandomVertex();
 				int innerCount = 0;
 				while (denseGraph.getEdgesofNode(otherNode).size() > requiredNumOfNeighbors) {
 					otherNode = generateRandomVertex();
 					if (innerCount++ >= (int)((10/(double)numVertices)*5000)) {
 //						System.out.println("innercounter = " + innerCount + " : " + vertexID + " - " + otherNode + ": all vertices incident greater than required number!");
+						offset++;
 						break;
 					}
 				}

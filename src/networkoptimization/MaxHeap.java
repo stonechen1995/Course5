@@ -6,7 +6,7 @@ package networkoptimization;
  * In particular, your implementation should include subroutines for maximum, insert, and delete.
  * Since the heap structure you implement will be used for a Dijkstra-style algorithm in the routing protocol, 
  * we suggest the following data structures in your implementation:
- * • The vertices of a graph are named by integers 0, 1, . . ., 4999;
+ * (done)• The vertices of a graph are named by integers 0, 1, . . ., 4999;
  * • The heap is given by an array H[5000], where each element H[i] gives the name of a vertex in the graph;
  * • The vertex “values” are given in another array D[5000]. 
  *     Thus, to find the value of a vertex H[i] in the heap, we can use D[H[i]].
@@ -22,7 +22,7 @@ class MaxHeap {
     private int[] values; //
     private int size; //size of the heap
     
-	public MaxHeap(int edgeSize)
+	MaxHeap(int edgeSize)
     {
 		this.vertices = new int[edgeSize];
 		this.values = new int[edgeSize];
@@ -41,11 +41,15 @@ class MaxHeap {
 		return (nodeIdx - 1) / 2;
 	}
 	
-	public void insert(int i) {
+	void insert(int i) {
 		
 	}
 	
-	public void remove(int i) {
+	void remove(int i) {
+		
+	}
+	
+	void max(int i) {
 		
 	}
 	
