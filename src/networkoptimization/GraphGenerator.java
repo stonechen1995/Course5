@@ -109,11 +109,11 @@ class GraphGenerator {
 				int innerCount = 0;
 				while (denseGraph.getEdgesofNode(otherNode).size() > requiredNumOfNeighbors) {
 					otherNode = generateRandomVertex();
-					if (innerCount++ >= (int)((10/(double)numVertices)*5000)) {
+//					if (innerCount++ >= (int)((10/(double)numVertices)*5000)) {
 //						System.out.println("innercounter = " + innerCount + " : " + vertexID + " - " + otherNode + ": all vertices incident greater than required number!");
 						offset++;
 						break;
-					}
+//					}
 				}
 				int weight = generateRandomWeight();
 //				System.out.println("nodeA: " + vertexID + "; nodeB: " + otherNode + "; weight: " + weight);
@@ -122,7 +122,6 @@ class GraphGenerator {
 //					System.out.println();
 //					System.out.println("totalDegree = " + denseGraph.getNumEdges()*2);
 				} catch (NullPointerException e) {
-				
 					//System.out.println("Edge existing; again!");
 				} catch (IllegalArgumentException e) {
 					//System.out.println("Invalid arguments; again!");
@@ -164,6 +163,7 @@ class GraphGenerator {
 		return connectedGraph;
 	}
 	
+	/*
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		// Create a randomgraph object
@@ -180,6 +180,6 @@ class GraphGenerator {
 		// Print the graph
 		System.out.println("The generated random dense graph: ");
 		denseGraph.printGraphInfo();
-	}
+	}*/
 
 }

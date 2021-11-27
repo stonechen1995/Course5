@@ -97,6 +97,7 @@ class Graph {
 		}
 	}
 	
+	/*
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Graph testG1 = new Graph(8);
@@ -121,8 +122,7 @@ class Graph {
 		
 		System.out.println("find edge");
 		testG1.getEdgeBtw(0,1).printEdge();
-
-	}
+	}*/
 	
 }
 

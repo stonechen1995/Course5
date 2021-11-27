@@ -1,157 +1,238 @@
 package networkoptimization;
 
-/**
- * @author Stone
- * Heap Structure Write subroutines for the max-heap structure. 
- * In particular, your implementation should include subroutines for maximum, insert, and delete.
- * Since the heap structure you implement will be used for a Dijkstra-style algorithm in the routing protocol, 
- * we suggest the following data structures in your implementation:
- * • The vertices of a graph are named by integers 0, 1, . . ., 4999;
- * • The heap is given by an array H[5000], where each element H[i] gives the name of a vertex in the graph;
- * • The vertex “values” are given in another array D[5000]. 
- *     Thus, to find the value of a vertex H[i] in the heap, we can use D[H[i]].
- * • In the operation delete(v) that deletes the vertex v from the heap H[5000], 
- *     you need to find the position of the vertex in the heap. For this, 
- *     you can use another array P[5000] so that P[v] is the position (i.e., index) of vertex v in the heap H[5000]. 
- *     Note that this array P[5000] should be modified according when you move vertices in the heap H[5000].
- */
+class GFG{
 
-class MaxHeapExample {
-	private int[] heapArr;
-    private int size;
-    private int maxsize;
- 
-    // Constructor to initialize an
-    // empty max heap with given maximum
-    // capacity
-    public MaxHeapExample(int maxsize)
-    {
-        // This keyword refers to current instance itself
-        this.maxsize = maxsize;
-        this.size = 0;
-        heapArr = new int[this.maxsize];
-    }
- 
-    // Returning position of parent
-    private int parent(int pos) { 
-    	return (pos - 1) / 2; 
-    }
+	static int []H = new int[50];
+	static int size = -1;
 
-    // Returning left children
-    private int leftChild(int pos) {
-    	return (2 * pos); 
-    }
+	// Function to return the index of the
+	// parent node of a given node
+	static int parent(int i)
+	{
+		return (i - 1) / 2;
+	}
 
-    // Method 3
-    // Returning left children
-    private int rightChild(int pos)
-    {
-    	return (2 * pos) + 1;
-    }
+	// Function to return the index of the
+	// left child of the given node
+	static int leftChild(int i)
+	{
+		return ((2 * i) + 1);
+	}
 
-    // Method 4
-    // Returning true of given node is leaf
-    private boolean isLeaf(int pos)
-    {
-        if (pos > (size / 2) && pos <= size) {
-            return true;
-        }
-        return false;
-    }
- 
-    // Method 5
-    // Swapping nodes
-    private void swap(int fpos, int spos)
-    {
-        int tmp;
-        tmp = heapArr[fpos];
-        heapArr[fpos] = heapArr[spos];
-        heapArr[spos] = tmp;
-    }
- 
-    // Method 6
-    // Recursive function to max heapify given subtree
-    private void maxHeapify(int pos)
-    {
-        if (isLeaf(pos))
-            return;
- 
-        if (heapArr[pos] < heapArr[leftChild(pos)]
-            || heapArr[pos] < heapArr[rightChild(pos)]) {
- 
-            if (heapArr[leftChild(pos)]
-                > heapArr[rightChild(pos)]) {
-                swap(pos, leftChild(pos));
-                maxHeapify(leftChild(pos));
-            }
-            else {
-                swap(pos, rightChild(pos));
-                maxHeapify(rightChild(pos));
-            }
-        }
-    }
- 
-    // Method 7
-    // Inserts a new element to max heap
-    public void insert(int element)
-    {
-        heapArr[size] = element;
- 
-        // Traverse up and fix violated property
-        int current = size;
-        while (heapArr[current] > heapArr[parent(current)]) {
-            swap(current, parent(current));
-            current = parent(current);
-        }
-        size++;
-    }
- 
-    // Method 8
-    // To display heap
-    public void print()
-    {
-        for (int i = 0; i <= size / 2; i++) {
-            System.out.print(
-                " PARENT : " + heapArr[i]
-                + " LEFT CHILD : " + heapArr[2 * i + 1]
-                + " RIGHT CHILD :" + heapArr[2 * i + 2]);
-            System.out.println();
-        }
-    }
- 
-    // Method 9
-    // Remove an element from max heap
-    public int extractMax()
-    {
-        int popped = heapArr[1];
-        heapArr[1] = heapArr[size--];
-        maxHeapify(1);
-        return popped;
-    }
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		// Display message for better readability
-        System.out.println("The Max Heap is ");
- 
-        MaxHeapExample maxHeap = new MaxHeapExample(15);
- 
-        // Inserting nodes
-        // Custom inputs
-        maxHeap.insert(5);
-        maxHeap.insert(3);
-        maxHeap.insert(17);
-        maxHeap.insert(10);
-        maxHeap.insert(84);
-        maxHeap.insert(19);
-        maxHeap.insert(6);
-        maxHeap.insert(22);
-        maxHeap.insert(9);
- 
-        // Calling maxHeap() as defined above
-        maxHeap.print();
- 
-        // Print and display the maximum value in heap
-        System.out.println("The max val is "
-                           + maxHeap.extractMax());
+	// Function to return the index of the
+	// right child of the given node
+	static int rightChild(int i)
+	{
+		return ((2 * i) + 2);
+	}
+
+	// Function to shift up the
+	// node in order to maintain
+	// the heap property
+	static void shiftUp(int i)
+	{
+		while (i > 0 &&
+				H[parent(i)] < H[i])
+		{
+			// Swap parent and current node
+			swap(parent(i), i);
+
+			// Update i to parent of i
+			i = parent(i);
+		}
+	}
+
+	// Function to shift down the node in
+	// order to maintain the heap property
+	static void shiftDown(int i)
+	{
+		int maxIndex = i;
+
+		// Left Child
+		int l = leftChild(i);
+
+		if (l <= size &&
+				H[l] > H[maxIndex])
+		{
+			maxIndex = l;
+		}
+
+		// Right Child
+		int r = rightChild(i);
+
+		if (r <= size &&
+				H[r] > H[maxIndex])
+		{
+			maxIndex = r;
+		}
+
+		// If i not same as maxIndex
+		if (i != maxIndex)
+		{
+			swap(i, maxIndex);
+			shiftDown(maxIndex);
+		}
+	}
+
+	// Function to insert a
+	// new element in
+	// the Binary Heap
+	static void insert(int p)
+	{
+		size = size + 1;
+		H[size] = p;
+
+		// Shift Up to maintain
+		// heap property
+		shiftUp(size);
+	}
+
+	// Function to extract
+	// the element with
+	// maximum priority
+	static int extractMax()
+	{
+		int result = H[0];
+
+		// Replace the value
+		// at the root with
+		// the last leaf
+		H[0] = H[size];
+		size = size - 1;
+
+		// Shift down the replaced
+		// element to maintain the
+		// heap property
+		shiftDown(0);
+		return result;
+	}
+
+	// Function to change the priority
+	// of an element
+	static void changePriority(int i,
+			int p)
+	{
+		int oldp = H[i];
+		H[i] = p;
+
+		if (p > oldp)
+		{
+			shiftUp(i);
+		}
+		else
+		{
+			shiftDown(i);
+		}
+	}
+
+	// Function to get value of
+	// the current maximum element
+	static int getMax()
+	{
+		return H[0];
+	}
+
+	// Function to remove the element
+	// located at given index
+	static void remove(int i)
+	{
+		H[i] = getMax() + 1;
+
+		// Shift the node to the root
+		// of the heap
+		shiftUp(i);
+
+		// Extract the node
+		extractMax();
+	}
+
+	static void swap(int i, int j)
+	{
+		int temp= H[i];
+		H[i] = H[j];
+		H[j] = temp;
+	}
+
+	// Driver Code
+	public static void main(String[] args)
+	{
+
+		/*           45
+            /        \
+           31      14
+          /  \    /  \
+         13  20  7   11
+        /  \
+       12   7
+    Create a priority queue shown in
+    example in a binary max heap form.
+    Queue will be represented in the
+    form of array as:
+    45 31 14 13 20 7 11 12 7 */
+
+		// Insert the element to the
+		// priority queue
+		insert(45);
+		insert(20);
+		insert(14);
+		insert(12);
+		insert(31);
+		insert(7);
+		insert(11);
+		insert(13);
+		insert(7);
+
+		int i = 0;
+
+		// Priority queue before extracting max
+		System.out.print("Priority Queue : ");
+		while (i <= size)
+		{
+			System.out.print(H[i] + " ");
+			i++;
+		}
+
+		System.out.print("\n");
+
+		// Node with maximum priority
+		System.out.print("Node with maximum priority : " +
+				extractMax() + "\n");
+
+		// Priority queue after extracting max
+		System.out.print("Priority queue after " +
+				"extracting maximum : ");
+		int j = 0;
+		while (j <= size)
+		{
+			System.out.print(H[j] + " ");
+			j++;
+		}
+
+		System.out.print("\n");
+
+		// Change the priority of element
+		// present at index 2 to 49
+		changePriority(2, 49);
+		System.out.print("Priority queue after " +
+				"priority change : ");
+		int k = 0;
+		while (k <= size)
+		{
+			System.out.print(H[k] + " ");
+			k++;
+		}
+
+		System.out.print("\n");
+
+		// Remove element at index 3
+		remove(3);
+		System.out.print("Priority queue after " +
+				"removing the element : ");
+		int l = 0;
+		while (l <= size)
+		{
+			System.out.print(H[l] + " ");
+			l++;
+		}
 	}
 }

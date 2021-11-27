@@ -50,11 +50,11 @@ class Edge {
 		return nodeA + " - "+ nodeB + ": weight: " + weight;
 	}
 
-//	public static void main(String[] args) {
-//		// TODO Auto-generated method stub
-//		Edge edge = new Edge(1, 2, 10);
-//		edge.printEdge();
-//		
-//	}
+	/*
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Edge edge = new Edge(1, 2, 10);
+		edge.printEdge();
+	}*/
 
 }
