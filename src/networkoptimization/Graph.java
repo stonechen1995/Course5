@@ -1,6 +1,9 @@
 package networkoptimization;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+
+import geography.GeographicPoint;
 
 
 /**
@@ -95,6 +98,147 @@ class Graph {
 				}
 			}
 		}
+	}
+	
+	
+	//An algorithm for Max-Bandwidth-Path based on a modification of 
+	  //Dijkstra’s algorithm without using a heap structure;
+	int findMBPath_Baisc(int start, int goal) {
+		int[] status = new int[getNumVertices()]; //unseen = 0; fringe = 1; seen = 2;
+		int[] dad = new int[getNumVertices()];
+		int[] bw = new int[getNumVertices()];
+		ArrayList<Integer> fringeQueue = new ArrayList<Integer>();
+		
+		status[start] = 2; 
+		dad[start] = -1;
+		
+		//enqueue all edges of starting node into the fringeQueue
+		for (Edge edge : getEdgesofNode(start)) {
+			int neighbor = edge.getNode(start);
+			status[neighbor] = 1;
+			dad[neighbor] = start;
+			bw[neighbor] = edge.getWeight();
+			fringeQueue.add(neighbor);
+		}
+		//System.out.println("added all neighbors of starting node: " + start + " to the fringeQueue");
+		
+		while (!fringeQueue.isEmpty()) {
+//			System.out.println(fringeQueue);
+			int fringeNameWithMaxBW = fringeQueue.get(0);
+			int temp = 0;
+			for (int i = 0; i < fringeQueue.size(); i++) {
+				int fringe = fringeQueue.get(i);
+				if (bw[fringe] > bw[fringeNameWithMaxBW]) {
+					fringeNameWithMaxBW = fringe;
+					temp = i;
+				}
+			}
+			status[fringeNameWithMaxBW] = 2;
+//			System.out.println("1. remove the root (max): " + fringeNameWithMaxBW + " : " + bw[fringeNameWithMaxBW]);
+			fringeQueue.remove(temp);
+			for (Edge edge : getEdgesofNode(fringeNameWithMaxBW)) {
+				int neighbor = edge.getNode(fringeNameWithMaxBW);
+				if (status[neighbor] == 0) {
+					status[neighbor] = 1;
+					dad[neighbor] = fringeNameWithMaxBW;
+					bw[neighbor] = Integer.min(edge.getWeight(), bw[fringeNameWithMaxBW]); 
+					fringeQueue.add(neighbor);
+//					System.out.println("2. insert the vertex: " + neighbor + " : " + bw[neighbor]);
+				} else if (status[neighbor] == 1 && 
+						bw[neighbor] < Integer.min(edge.getWeight(), bw[fringeNameWithMaxBW])) {
+//					System.out.println("3. update the node: " + neighbor);
+					bw[neighbor] = Integer.min(edge.getWeight(), bw[fringeNameWithMaxBW]);
+					dad[neighbor] = fringeNameWithMaxBW;
+				}
+			}
+		}
+		
+		if (status[goal] != 2) {
+			System.out.println("no path from " + start + " to " + goal);
+			return -1; //no path from start to goal
+		}
+		else constructPath(start, goal, dad, bw);
+		
+		return bw[goal];
+	}
+	
+	//An algorithm for Max-Bandwidth-Path based on a modification of 
+	  //Dijkstra’s algorithm using a heap structure for fringes;
+	int findMBPath_Heap(int start, int goal) {
+		int[] status = new int[getNumVertices()]; //unseen = 0; fringe = 1; seen = 2;
+		int[] dad = new int[getNumVertices()];
+		int[] bw = new int[getNumVertices()];
+		MaxHeap fringeQueue = new MaxHeap(getNumVertices());
+
+		status[start] = 2; 
+		dad[start] = -1;
+
+		//enqueue all edges of starting node into the fringeQueue
+		for (Edge edge : getEdgesofNode(start)) {
+			int neighbor = edge.getNode(start);
+			status[neighbor] = 1;
+			dad[neighbor] = start;
+			bw[neighbor] = edge.getWeight();
+			fringeQueue.insert(neighbor, bw[neighbor]);
+		}
+		//System.out.println("added all neighbors of starting node: " + start + " to the fringeQueue");
+
+		while (fringeQueue.size() > 0) {
+//			fringeQueue.printHeapArray();
+			int fringeNameWithMaxBW = fringeQueue.remove();
+//			System.out.println("1. remove the root (max): " + fringeNameWithMaxBW + " : " + bw[fringeNameWithMaxBW]);
+//			fringeQueue.printHeapArray();
+			status[fringeNameWithMaxBW] = 2;
+			for (Edge edge : getEdgesofNode(fringeNameWithMaxBW)) {
+				int neighbor = edge.getNode(fringeNameWithMaxBW);
+				if (status[neighbor] == 0) {
+					status[neighbor] = 1;
+					dad[neighbor] = fringeNameWithMaxBW;
+					bw[neighbor] = Integer.min(edge.getWeight(), bw[fringeNameWithMaxBW]);
+					fringeQueue.insert(neighbor, bw[neighbor]);
+//					System.out.println("2. insert the vertex: " + neighbor + " : " + bw[neighbor]);
+//					fringeQueue.printHeapArray();
+				} else if (status[neighbor] == 1 && 
+						bw[neighbor] < Integer.min(edge.getWeight(), bw[fringeNameWithMaxBW])) {
+					int neighborPos = fringeQueue.getHeapPosition(neighbor);
+					fringeQueue.remove(neighborPos);
+//					System.out.println("3. update (remove) the node: " + neighbor);
+//					fringeQueue.printHeapArray();
+					bw[neighbor] = Integer.min(edge.getWeight(), bw[fringeNameWithMaxBW]);
+					fringeQueue.insert(neighbor, bw[neighbor]);
+//					System.out.println("3. update (insert) the node: " + neighbor);
+//					fringeQueue.printHeapArray();
+					dad[neighbor] = fringeNameWithMaxBW;
+				}
+			}
+		}
+		
+		if (status[goal] != 2) {
+			System.out.println("no path from " + start + " to " + goal);
+			return -1; //no path from start to goal
+		}
+		else constructPath(start, goal, dad, bw);
+
+		return bw[goal];
+	}
+	
+	//An algorithm for Max-Bandwidth-Path based on a modification of 
+	  //Kruskal’s algorithm, in which the edges are sorted by HeapSort.
+	int findMBPath_Kruskals(int start, int goal) {
+		
+		return 0;
+	}
+	
+	private ArrayList<Integer> constructPath(int start, int goal, int[] dad, int[] bw) {
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		int curr = goal;
+		while (curr != start) {
+			result.add(0, curr);
+			curr = dad[curr];
+		}
+		result.add(0, start);
+		System.out.println("BandWidth = " + bw[goal] + " : " + result);
+		return result;
 	}
 	
 	/*

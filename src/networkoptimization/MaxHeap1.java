@@ -1,5 +1,7 @@
 package networkoptimization;
 
+import java.util.ArrayList;
+
 /**
  * @author Stone
  * Heap Structure Write subroutines for the max-heap structure. 
@@ -16,23 +18,19 @@ package networkoptimization;
  *     Note that this array P[5000] should be modified accordingly when you move vertices in the heap H[5000].
  */
 
-class MaxHeap {
+class MaxHeap1 {
 	
-	private int[] verticesName; //each cell stores the vertex ID
-    private int[] data; //data[i] corresponds to vertices[i]
-    private int[] pos; //vertexName = 3 is stored in verticesName[5] -> pos[3] = 5;
-    private int actualSize; //actual size of the heap
+	private ArrayList<Integer> verticesName; //each cell stores the vertex ID
+    private ArrayList<Integer> data; //data[i] corresponds to vertices[i]
     
-	MaxHeap(int predefinedSize)
+	MaxHeap1(int predefinedSize)
     {
-		this.verticesName = new int[predefinedSize];
-		this.data = new int[predefinedSize];
-		this.pos = new int[predefinedSize]; 
-		this.actualSize = 0;
+		this.verticesName = new ArrayList<Integer>();
+		this.data = new ArrayList<Integer>();
     }
 	
 	int size() {
-		return actualSize;
+		return verticesName.size();
 	}
 	
 	private int getLeftChildNodeID(int nodeIdx) {
@@ -47,52 +45,35 @@ class MaxHeap {
 		return (nodeIdx - 1) / 2;
 	}
 	
-	int getHeapPosition(int vertexName) {
-		return pos[vertexName];
-	}
-	
-	void printPosition() {
-		System.out.println("heap pos: ");
-        for (int id = 0; id < verticesName.length; id++) {
-            System.out.println("pos[" + id + "] = " + pos[id]); 
-        }
-        System.out.println();
-        
-	}
-	
 	int getMax() {
-		return verticesName[0];
+		return verticesName.get(0);
 	}
 	
 	void insert(int vertexName, int value) {
-		verticesName[actualSize] = vertexName;
-		data[actualSize] = value;
-		pos[vertexName] = actualSize;
-		moveUp(actualSize);
-        actualSize++;
+		verticesName.add(vertexName);
+		data.add(value);
+		moveUp(verticesName.size()-1);
 	}
 	
 	private void moveUp(int nodeIdx) {
 		//System.out.println("move up: nodeIdx = " + nodeIdx + " > 0; data[nodeIdx] = " + data[nodeIdx] 
 				//+ " < data[getParentID(nodeIdx)] = " + data[getParentID(nodeIdx)]);
-		if (nodeIdx > 0 && data[nodeIdx] > data[getParentID(nodeIdx)]) {
+		if (nodeIdx > 0 && data.get(nodeIdx) > data.get(getParentID(nodeIdx))) {
 			//System.out.println("swapped");
 			swap(nodeIdx, getParentID(nodeIdx));
 			moveUp(getParentID(nodeIdx));
 		}
 	}
 	
+//	private void delete
+	
 	int remove(int nodeIdx) {
-		//pos[verticesName[nodeIdx]] = 0;
-		swap(actualSize-1, nodeIdx);
-		actualSize--;
-		if (data[nodeIdx] > data[getParentID(nodeIdx)]) {
-			moveUp(nodeIdx);
-		} else {
-			moveDown(nodeIdx);
-		}
+		swap(verticesName.size()-1, nodeIdx);
+		int removed = verticesName.remove(verticesName.size()-1);
+		data.remove(verticesName.size()-1);
+		moveDown(nodeIdx);
 		
-		return verticesName[actualSize];
+		return removed;
 //		return data[actualSize];
 	}
 	
@@ -111,11 +92,11 @@ class MaxHeap {
 		//System.out.println("swapParentWithChildren starts: " + "parentDataIdx = " + parentIdx);
 		int maxIdx = parentIdx;
 		
-		if (getLeftChildNodeID(parentIdx) < actualSize && 
-				data[getLeftChildNodeID(parentIdx)] > data[maxIdx])
+		if (getLeftChildNodeID(parentIdx) < verticesName.size() && 
+				data.get(getLeftChildNodeID(parentIdx)) > data.get(maxIdx))
 			maxIdx = getLeftChildNodeID(parentIdx);
-		if (getRightChildNodeID(parentIdx) < actualSize && 
-				data[getRightChildNodeID(parentIdx)] > data[maxIdx])
+		if (getRightChildNodeID(parentIdx) < verticesName.size() && 
+				data.get(getRightChildNodeID(parentIdx)) > data.get(maxIdx))
 			maxIdx = getRightChildNodeID(parentIdx);
 
 		if (maxIdx != parentIdx) {
@@ -130,44 +111,41 @@ class MaxHeap {
 	}
 	
 	int getVertexName(int i) {
-		return verticesName[i];
+		return verticesName.get(i);
 	}
 	
 	int getData(int i) {
-		return data[i];
+		return data.get(i);
 	}
 	
 	int getDataFromVertexName(int vertexName) {
-		for (int i = 0; i < actualSize; i++) {
-			if (vertexName == verticesName[i])
-				return data[i];
+		for (int i = 0; i < verticesName.size(); i++) {
+			if (vertexName == verticesName.get(i))
+				return data.get(i);
 		}
 		
 		return -1;
 	}
 	
 	private void swap(int nodeA, int nodeB) {
-		int temp = pos[verticesName[nodeB]];
-		pos[verticesName[nodeB]] = pos[verticesName[nodeA]];
-		pos[verticesName[nodeA]] = temp;
-		temp = verticesName[nodeA];
-		verticesName[nodeA] = verticesName[nodeB];
-		verticesName[nodeB] = temp;
-		temp = data[nodeA];
-		data[nodeA] = data[nodeB];
-		data[nodeB] = temp;
+		int temp = verticesName.get(nodeA);
+		verticesName.set(nodeA, verticesName.get(nodeB));
+		verticesName.set(nodeB, temp);
+		temp = data.get(nodeA);
+		data.set(nodeA, data.get(nodeB));
+		data.set(nodeB, temp);
 	}
 	
 	public void printHeap()
     {
 		System.out.println("Root: VertexName -> " + getVertexName(0)+ " : " + getData(0));
-        for (int id = 0; id <= actualSize / 2; id++) {
-        	if (id < actualSize)
-                System.out.print("(" + id + ")parent: " + verticesName[id] + " = " + data[id]);
-        	if (2 * id + 1 < actualSize)
-            	System.out.print("; (" + (2 * id + 1) + ")left: " + verticesName[2 * id + 1] + " = " + data[2 * id + 1]);
-        	if (2 * id + 2 < actualSize)
-            	System.out.print("; (" + (2 * id + 2) + ")right: " + verticesName[2 * id + 2] + " = " + data[2 * id + 2]);
+        for (int id = 0; id <= verticesName.size() / 2; id++) {
+        	if (id < verticesName.size())
+                System.out.print("(" + id + ")parent: " + verticesName.get(id) + " = " + data.get(id));
+        	if (2 * id + 1 < verticesName.size())
+            	System.out.print("; (" + (2 * id + 1) + ")left: " + verticesName.get(2 * id + 1) + " = " + data.get(2 * id + 1));
+        	if (2 * id + 2 < verticesName.size())
+            	System.out.print("; (" + (2 * id + 2) + ")right: " + verticesName.get(2 * id + 2) + " = " + data.get(2 * id + 2));
         	System.out.println();
         }
         System.out.println("");
@@ -176,25 +154,16 @@ class MaxHeap {
 	public void printHeapArray()
     {
 		System.out.println("Root: VertexName -> " + getVertexName(0)+ " : " + getData(0));
-        for (int id = 0; id < actualSize; id++) {
-            System.out.println("(" + id + ")->" + verticesName[id] + " : " + data[id]); 
+        for (int id = 0; id < verticesName.size(); id++) {
+            System.out.println("(" + id + ")->" + verticesName.get(id) + " : " + data.get(id)); 
         }
         System.out.println();
-        printPosition();
     }
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-        MaxHeap heapTest = new MaxHeap(9);
-//        heapTest.insert(5, 16);
-//        heapTest.insert(0, 18);
-//        heapTest.insert(8, 14);
-//        heapTest.insert(3, 19);
-        
-
-        
-        
+        MaxHeap1 heapTest = new MaxHeap1(9);
 //      heapTest.printHeap();
         heapTest.insert(0, 6);
 //        heapTest.printHeap();
