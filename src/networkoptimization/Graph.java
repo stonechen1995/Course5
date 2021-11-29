@@ -29,7 +29,6 @@ class Graph {
 		}
 	}
 
-	//false means 
 	void addEdge(int nodeA, int nodeB, int weight) {
 		if (nodeA > numVertices || nodeA < 0 || nodeB > numVertices || 
 				nodeB < 0 || weight < 0 || nodeA == nodeB )
@@ -292,7 +291,15 @@ class Graph {
 	
 	private int findRoot(int vertex, int[] dad)  {
 		int curr = vertex;
-		while (dad[curr] != -1) curr = dad[curr];
+		ArrayList<Integer> stack = new ArrayList<Integer>();
+		while (dad[curr] != -1) { 
+			stack.add(curr);
+			curr = dad[curr];
+		}
+		while (!stack.isEmpty()) {
+			int node = stack.remove(stack.size()-1);
+			dad[node] = curr;
+		}
 		return curr;
 	}
 	
@@ -313,7 +320,7 @@ class Graph {
 			curr = dad[curr];
 		}
 		result.add(0, start);
-//		System.out.println("BandWidth = " + bw[goal] + " : " + result);
+		//System.out.println("BandWidth = " + bw[goal] + " : " + result);
 		return result;
 	}
 	

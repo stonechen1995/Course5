@@ -66,28 +66,6 @@ class GraphGenerator {
 			return sparseGraph;
 	}
 
-//	Graph generateDenseGraph1(int numVertices, int degreePercentage_predefined) {
-//		Graph graph = new Graph(numVertices);
-//        Random randomGenerator = new Random();
-//        //Generate Vertices in Undirected Dense Graph
-//        int count = 0;
-//        for (int i = 0; i < numVertices; i++) {
-//            for (int j = i + 1; j < numVertices; j++) {
-//                int randomProbability = randomGenerator.nextInt(100) + 1;
-//                int randomWeight = randomGenerator.nextInt(100) + 1;
-//                //System.out.println("Generate a random number in [0,100]: " + randomProbability);
-//                if (randomProbability <= degreePercentage_predefined) {
-//                    graph.addEdge(i, j, randomWeight);
-//                    count++;
-//                }
-//            }
-//        }
-//
-//        System.out.println("INFO: Generate Undirected Dense Graph");
-//        System.out.println("Added total " + count + " number of edges");
-//        return graph;
-//	}
-	
 	Graph generateDenseGraph(int numVertices, int degreePercentage_predefined) {
 		if (numVertices <= 0)
 			throw new IllegalArgumentException("Number of vertices must be positive when generate a graph");

@@ -31,7 +31,7 @@ class main {
 		else System.out.println("test1 failed");
 	}
 	
-	static void test2(int testCount) {
+	static void test2(int testCount) throws Exception {
 		GraphGenerator test2 = new GraphGenerator();
 		
 		
@@ -59,6 +59,7 @@ class main {
 		if (count >= testCount) System.out.println("test2 all good");
 		else {
 			System.out.println("test2 failed");
+			throw new Exception("test failed");
 		}
 	}
 	
@@ -157,6 +158,32 @@ class main {
 			System.out.println("Kruskal testing: " + durationDenseKruskals[i]/100000 + " ms");
 			System.out.println();
 		}
+		
+		int totalTimeSparseBasic = 0;
+		int totalTimeSparseHeap = 0;
+		int totalTimeSparseKruskal = 0;
+		int totalTimeDenseBasic = 0;
+		int totalTimeDenseHeap = 0;
+		int totalTimeDenseKruskal = 0;
+		
+		for (int i = 0; i < 5; i++) {
+			totalTimeSparseBasic += durationSparseBasic[i]/100000;	
+			totalTimeSparseHeap += durationSparseHeap[i]/100000;
+			totalTimeSparseKruskal += durationSparseKruskals[i]/100000;
+			totalTimeDenseBasic += durationDenseBasic[i]/100000;
+			totalTimeDenseHeap += durationDenseHeap[i]/100000;
+			totalTimeDenseKruskal += durationDenseKruskals[i]/100000;
+
+		}
+		System.out.println("totalTimeSparseBasic = " + totalTimeSparseBasic + " ms");
+		System.out.println("totalTimeSparseHeap = " + totalTimeSparseHeap + " ms");
+		System.out.println("totalTimeSparseKruskal = " + totalTimeSparseKruskal + " ms");
+		System.out.println("totalTimeDenseBasic = " + totalTimeDenseBasic + " ms");
+		System.out.println("totalTimeDenseHeap = " + totalTimeDenseHeap + " ms");
+		System.out.println("totalTimeDenseKruskal = " + totalTimeDenseKruskal + " ms");
+		System.out.println("totalTimeBasic = " + (totalTimeSparseBasic + totalTimeDenseBasic) + " ms");
+		System.out.println("totalTimeHeap = " + (totalTimeSparseHeap + totalTimeDenseHeap) + " ms");
+		System.out.println("totalTimeKruskal = " + (totalTimeSparseKruskal + totalTimeDenseKruskal) + " ms");
 		
 		
 	}
