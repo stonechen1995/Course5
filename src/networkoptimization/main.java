@@ -147,14 +147,14 @@ class main {
 		System.out.println();
 		for (int i = 0; i < 5; i++) {
 			System.out.println("The running duration for No." + i + " Sparse Graph: ");
-			System.out.println("Basic testing:   " + durationSparseBasic[i]);
-			System.out.println("Heap testing:    " + durationSparseHeap[i]);
-			System.out.println("Kruskal testing: " + durationSparseKruskals[i]);
+			System.out.println("Basic testing:   " + durationSparseBasic[i]/100000 + " ms");
+			System.out.println("Heap testing:    " + durationSparseHeap[i]/100000 + " ms");
+			System.out.println("Kruskal testing: " + durationSparseKruskals[i]/100000 + " ms");
 			System.out.println();
 			System.out.println("The running duration for No." + i + " Dense Graph: ");
-			System.out.println("Basic testing:   " + durationDenseBasic[i]);
-			System.out.println("Heap testing:    " + durationDenseHeap[i]);
-			System.out.println("Kruskal testing: " + durationDenseKruskals[i]);
+			System.out.println("Basic testing:   " + durationDenseBasic[i]/100000 + " ms");
+			System.out.println("Heap testing:    " + durationDenseHeap[i]/100000 + " ms");
+			System.out.println("Kruskal testing: " + durationDenseKruskals[i]/100000 + " ms");
 			System.out.println();
 		}
 		
