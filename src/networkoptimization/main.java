@@ -150,7 +150,7 @@ class main {
 			System.out.println("Basic testing:   " + durationSparseBasic[i]/100000 + " ms");
 			System.out.println("Heap testing:    " + durationSparseHeap[i]/100000 + " ms");
 			System.out.println("Kruskal testing: " + durationSparseKruskals[i]/100000 + " ms");
-			System.out.println();
+//			System.out.println();
 			System.out.println("The running duration for No." + i + " Dense Graph: ");
 			System.out.println("Basic testing:   " + durationDenseBasic[i]/100000 + " ms");
 			System.out.println("Heap testing:    " + durationDenseHeap[i]/100000 + " ms");

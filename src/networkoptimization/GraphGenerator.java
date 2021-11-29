@@ -164,7 +164,7 @@ class GraphGenerator {
 		return connectedGraph;
 	}
 	
-	/*
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		// Create a randomgraph object
@@ -181,6 +181,6 @@ class GraphGenerator {
 		// Print the graph
 		System.out.println("The generated random dense graph: ");
 		denseGraph.printGraphInfo();
-	}*/
+	}
 
 }
