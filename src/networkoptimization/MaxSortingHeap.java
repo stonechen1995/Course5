@@ -1,5 +1,7 @@
 package networkoptimization;
 
+import java.util.ArrayList;
+
 /**
  * @author Stone
  * Heap Structure Write subroutines for the max-heap structure. 
@@ -16,19 +18,24 @@ package networkoptimization;
  *     Note that this array P[5000] should be modified accordingly when you move vertices in the heap H[5000].
  */
 
-class MaxHeap {
+class MaxSortingHeap {
 	
-	private int[] verticesName; //each cell stores the vertex ID
-    private int[] data; //data[i] corresponds to vertices[i]
-    private int[] pos; //vertexName = 3 is stored in verticesName[5] -> pos[3] = 5;
+	private Edge[] edges; //each cell stores the an edge
+    private int[] data; //data[i] stores the weight o the 
     private int actualSize; //actual size of the heap
     
-	MaxHeap(int predefinedSize) {
-		this.verticesName = new int[predefinedSize];
+    MaxSortingHeap(int predefinedSize) {
+		this.edges = new Edge[predefinedSize];
 		this.data = new int[predefinedSize];
-		this.pos = new int[predefinedSize]; 
 		this.actualSize = 0;
     }
+    
+//    MaxSortingHeap(Edge[] edges) {
+//    	this.edges = edges;
+//		this.edges = new Edge[predefinedSize];
+//		this.data = new int[predefinedSize];
+//		this.actualSize = 0;
+//    }
 	
 	int size() {
 		return actualSize;
@@ -46,27 +53,14 @@ class MaxHeap {
 		return (nodeIdx - 1) / 2;
 	}
 	
-	int getHeapPosition(int vertexName) {
-		return pos[vertexName];
+	Edge getMax() {
+		return edges[0];
 	}
 	
-	void printPosition() {
-		System.out.println("heap pos: ");
-        for (int id = 0; id < verticesName.length; id++) {
-            System.out.println("pos[" + id + "] = " + pos[id]); 
-        }
-        System.out.println();
-        
-	}
-	
-	int getMax() {
-		return verticesName[0];
-	}
-	
-	void insert(int vertexName, int value) {
-		verticesName[actualSize] = vertexName;
+	void insert(Edge edge) {
+		int value = edge.getWeight();
+		edges[actualSize] = edge;
 		data[actualSize] = value;
-		pos[vertexName] = actualSize;
 		moveUp(actualSize);
         actualSize++;
 	}
@@ -81,7 +75,7 @@ class MaxHeap {
 		}
 	}
 	
-	int remove(int nodeIdx) {
+	Edge remove(int nodeIdx) {
 		//pos[verticesName[nodeIdx]] = 0;
 		swap(actualSize-1, nodeIdx);
 		actualSize--;
@@ -91,11 +85,11 @@ class MaxHeap {
 			moveDown(nodeIdx);
 		}
 		
-		return verticesName[actualSize];
+		return edges[actualSize];
 //		return data[actualSize];
 	}
 	
-	int remove() {
+	Edge remove() {
 		return remove(0);
 	}
 	
@@ -128,17 +122,17 @@ class MaxHeap {
 		return -1;
 	}
 	
-	int getVertexName(int i) {
-		return verticesName[i];
+	Edge getEdge(int i) {
+		return edges[i];
 	}
 	
 	int getData(int i) {
 		return data[i];
 	}
 	
-	int getDataFromVertexName(int vertexName) {
+	int getDataFromEdge(Edge edge) {
 		for (int i = 0; i < actualSize; i++) {
-			if (vertexName == verticesName[i])
+			if (edge == edges[i])
 				return data[i];
 		}
 		
@@ -146,27 +140,24 @@ class MaxHeap {
 	}
 	
 	private void swap(int nodeA, int nodeB) {
-		int temp = pos[verticesName[nodeB]];
-		pos[verticesName[nodeB]] = pos[verticesName[nodeA]];
-		pos[verticesName[nodeA]] = temp;
-		temp = verticesName[nodeA];
-		verticesName[nodeA] = verticesName[nodeB];
-		verticesName[nodeB] = temp;
-		temp = data[nodeA];
+		Edge tempEdge = edges[nodeA];
+		edges[nodeA] = edges[nodeB];
+		edges[nodeB] = tempEdge;
+		int tempWeight = data[nodeA];
 		data[nodeA] = data[nodeB];
-		data[nodeB] = temp;
+		data[nodeB] = tempWeight;
 	}
 	
 	public void printHeap()
     {
-		System.out.println("Root: VertexName -> " + getVertexName(0)+ " : " + getData(0));
+		System.out.println("Root: edgeID -> " + getEdge(0)+ " : " + getData(0));
         for (int id = 0; id <= actualSize / 2; id++) {
         	if (id < actualSize)
-                System.out.print("(" + id + ")parent: " + verticesName[id] + " = " + data[id]);
+                System.out.print("(" + id + ")parent: " + edges[id] + " = " + data[id]);
         	if (2 * id + 1 < actualSize)
-            	System.out.print("; (" + (2 * id + 1) + ")left: " + verticesName[2 * id + 1] + " = " + data[2 * id + 1]);
+            	System.out.print("; (" + (2 * id + 1) + ")left: " + edges[2 * id + 1] + " = " + data[2 * id + 1]);
         	if (2 * id + 2 < actualSize)
-            	System.out.print("; (" + (2 * id + 2) + ")right: " + verticesName[2 * id + 2] + " = " + data[2 * id + 2]);
+            	System.out.print("; (" + (2 * id + 2) + ")right: " + edges[2 * id + 2] + " = " + data[2 * id + 2]);
         	System.out.println();
         }
         System.out.println("");
@@ -174,49 +165,52 @@ class MaxHeap {
 	
 	public void printHeapArray()
     {
-		System.out.println("Root: VertexName -> " + getVertexName(0)+ " : " + getData(0));
-        for (int id = 0; id < actualSize; id++) {
-            System.out.println("(" + id + ")->" + verticesName[id] + " : " + data[id]); 
+		System.out.println("Root: edgeID -> " + getEdge(0)+ " : " + getData(0));
+        for (int heapID = 0; heapID < actualSize; heapID++) {
+            System.out.println("(" + heapID + ")->" + edges[heapID] + " : " + data[heapID]); 
         }
         System.out.println();
-        printPosition();
     }
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		/*
+        MaxSortingHeap heapTest = new MaxSortingHeap(9);
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 1, 6));
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 2, 10));
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 3, 12));
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 4, 3));
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 5, 5));
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 6, 9));
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 7, 1));
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 8, 64));
+        heapTest.printHeap();
+        heapTest.insert(new Edge(0, 9, 26));
+        heapTest.printHeap();
+        
+        heapTest.remove(0);
+        heapTest.remove(0);
+        heapTest.printHeap();
+        heapTest.printHeapArray();*/
 		
-        MaxHeap heapTest = new MaxHeap(9);
-//        heapTest.insert(5, 16);
-//        heapTest.insert(0, 18);
-//        heapTest.insert(8, 14);
-//        heapTest.insert(3, 19);
-        
-
-        
-        
-//      heapTest.printHeap();
-        heapTest.insert(0, 6);
-//        heapTest.printHeap();
-        heapTest.insert(1, 10);
-//        heapTest.printHeap();
-        heapTest.insert(2, 20);
-//        heapTest.printHeap();
-        heapTest.insert(3, 22);
-//        heapTest.printHeap();
-        heapTest.insert(4, 33);
-//        heapTest.printHeap();
-        heapTest.insert(5, 3);
-//        heapTest.printHeap();
-        heapTest.insert(6, 99);
-//        heapTest.printHeap();
-        heapTest.insert(7, 24);
-//        heapTest.printHeap();
-        heapTest.insert(8, 42);
-        heapTest.printHeap();
-        
-        heapTest.remove(0);
-        heapTest.remove(0);
-        heapTest.printHeap();
+		GraphGenerator test2 = new GraphGenerator();
+		Graph sparseGraph = test2.generateSparseGraph(10, 3);
+		sparseGraph.printGraphInfo();
+		MaxSortingHeap heapTest2 = new MaxSortingHeap(sparseGraph.getNumEdges());
+		ArrayList<Edge> allEdges = sparseGraph.getAllEdges();
+		for (Edge e : allEdges) {
+			e.printEdge();
+			heapTest2.insert(e);
+		}
  
+		heapTest2.printHeap();
 	}
 }

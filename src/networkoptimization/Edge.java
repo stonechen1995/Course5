@@ -12,7 +12,7 @@ class Edge {
 	private int nodeA;
 	private int nodeB;
 	private int weight;
-
+	private boolean visited; //false means unvisited;
 
 	Edge(int nodeA, int nodeB, int weight) {
 		if (nodeA == nodeB) throw new IllegalArgumentException("Both nodes on the edge should not be the same!");
@@ -20,16 +20,32 @@ class Edge {
 		this.nodeA = nodeA; 
 		this.nodeB = nodeB;
 		this.weight = weight;
+		//this.visited = false;
 	}
-
-	//if no such node, return -1
+	/*
+	boolean getVisited() {
+		return visited;
+	}
 	
+	void setVisited(boolean status) {
+		visited = status;
+	}*/
+	
+	//if no such node, return -1
 	int getNode(int srcNode) {
 		if (srcNode == nodeA)
 			return nodeB;
 		else if (srcNode == nodeB)
 			return nodeA;
 		return -1;
+	}
+	
+	int getNodeA() {
+		return nodeA;
+	}
+	
+	int getNodeB() {
+		return nodeB;
 	}
 	
 	int getWeight() {

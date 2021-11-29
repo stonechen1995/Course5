@@ -1,9 +1,6 @@
 package networkoptimization;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-
-import geography.GeographicPoint;
 
 
 /**
@@ -16,6 +13,7 @@ class Graph {
 	//Class members
 	private int numVertices; //number of vertices in the graph needs to be predefined
 	private int numEdges;
+	private ArrayList<Edge> allEdges;
 	private ArrayList<Edge>[] adjListMap; //list of edges; adjListMap[i] represents a list a edges of vertex i
 	//To return an edge set of a vertex, do "adjListMap[i]".
 	
@@ -23,8 +21,9 @@ class Graph {
 	Graph(int numVertices) {
 		this.numVertices = numVertices;
 		numEdges = 0;
+		allEdges = new ArrayList<Edge>();
 		adjListMap = new ArrayList[numVertices];
-
+		
 		for (int i = 0; i < numVertices; i++) {
 			adjListMap[i] = new ArrayList<Edge>();
 		}
@@ -48,7 +47,12 @@ class Graph {
 		Edge newEdge = new Edge(nodeA, nodeB, weight);
 		adjListMap[nodeA].add(newEdge);
 		adjListMap[nodeB].add(newEdge);
+		allEdges.add(newEdge);
 		numEdges++;
+	}
+	
+	void addEdge(Edge edge) {
+		addEdge(edge.getNodeA(), edge.getNodeB(), edge.getWeight());
 	}
 	
 	ArrayList<Edge> getEdgesofNode(int node) {
@@ -77,6 +81,10 @@ class Graph {
 		return numEdges;
 	}
 
+	ArrayList<Edge> getAllEdges() {
+		return allEdges;
+	}
+	
 	ArrayList<Edge>[] getMap() { 
 		//TODO: a new copy or return the same one?
 		return adjListMap;
@@ -225,10 +233,78 @@ class Graph {
 	//An algorithm for Max-Bandwidth-Path based on a modification of 
 	  //Kruskal’s algorithm, in which the edges are sorted by HeapSort.
 	int findMBPath_Kruskals(int start, int goal) {
-		
-		return 0;
+		int[] status = new int[getNumVertices()]; //unseen = 0; fringe = 1; seen = 2;
+		int[] dad = new int[getNumVertices()];
+		int[] bw = new int[getNumVertices()];
+		int[] rank = new int[getNumVertices()];
+		int[] color = new int[getNumVertices()]; //0 means white, 
+		Graph maxSpTree = new Graph(getNumVertices());
+		ArrayList<Edge> edgeList = new ArrayList<Edge>();
+		//list all edges in order
+		MaxSortingHeap edgeMaxHeap = new MaxSortingHeap(getNumEdges());
+		for (Edge edge : allEdges) {
+//			edge.printEdge();
+			edgeMaxHeap.insert(edge);
+		}
+		//makeSet
+		for (int vertex = 0; vertex < getNumVertices(); vertex++) {
+			dad[vertex] = -1;
+			rank[vertex] = 0;
+		}
+		//find and union
+		for (int i = 0; i < getNumEdges(); i++) {
+			Edge edge = edgeMaxHeap.remove();
+			int rootA = findRoot(edge.getNodeA(), dad);
+			int rootB = findRoot(edge.getNodeB(), dad);
+			if (rootA != rootB) {
+				union(rootA, rootB, dad, rank);
+				maxSpTree.addEdge(edge);
+			}
+		}
+		maxSpTree.bfs(start, goal, bw);
+		return bw[goal];
+	}
+
+	public ArrayList<Integer> bfs(int start, int goal, int[] bw) {
+		if (start >= getNumVertices() || goal >= getNumVertices() 
+				|| start < 0 || goal < 0) return null;
+		int[] parent = new int[getNumVertices()];
+		ArrayList<Integer> queue = new ArrayList<Integer>();
+		boolean[] visited = new boolean[getNumVertices()];
+		queue.add(start);
+		bw[start] = Integer.MAX_VALUE;
+		while(!queue.isEmpty()) {
+			int curr = queue.remove(0);
+			if (curr == goal) return constructPath(start, goal, parent, bw);
+			for (Edge edge : getEdgesofNode(curr)) {
+				int neighbor = edge.getNode(curr);
+				bw[neighbor] = Integer.min(edge.getWeight(), bw[curr]);
+				if (!visited[neighbor]) {
+					queue.add(neighbor);
+					parent[neighbor] = curr;
+					visited[neighbor] = true;
+				}
+			}
+		}
+		return null;
 	}
 	
+	
+	private int findRoot(int vertex, int[] dad)  {
+		int curr = vertex;
+		while (dad[curr] != -1) curr = dad[curr];
+		return curr;
+	}
+	
+	private void union(int rootA, int rootB, int[] dad, int[] rank) {
+		if (rank[rootA] > rank[rootB]) dad[rootB] = rootA;
+		else if (rank[rootB] > rank[rootA]) dad[rootA] = rootB;
+		else {
+			dad[rootB] = rootA;
+			rank[rootA]++;
+		}
+	}
+
 	private ArrayList<Integer> constructPath(int start, int goal, int[] dad, int[] bw) {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int curr = goal;
@@ -237,11 +313,11 @@ class Graph {
 			curr = dad[curr];
 		}
 		result.add(0, start);
-		System.out.println("BandWidth = " + bw[goal] + " : " + result);
+//		System.out.println("BandWidth = " + bw[goal] + " : " + result);
 		return result;
 	}
 	
-	/*
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Graph testG1 = new Graph(8);
@@ -266,9 +342,7 @@ class Graph {
 		
 		System.out.println("find edge");
 		testG1.getEdgeBtw(0,1).printEdge();
-	}*/
+	}
 	
 }
-
-
 
