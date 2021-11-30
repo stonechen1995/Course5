@@ -148,14 +148,14 @@ class main {
 		System.out.println();
 		for (int i = 0; i < 5; i++) {
 			System.out.println("The running duration for No." + i + " Sparse Graph: ");
-			System.out.println("Basic testing:   " + durationSparseBasic[i]/100000 + " ms");
-			System.out.println("Heap testing:    " + durationSparseHeap[i]/100000 + " ms");
-			System.out.println("Kruskal testing: " + durationSparseKruskals[i]/100000 + " ms");
+			System.out.println("Basic testing:   " + durationSparseBasic[i]/100000 + " ms, MaximumBW = " + resultSparseBasic[i]);
+			System.out.println("Heap testing:    " + durationSparseHeap[i]/100000 + " ms, MaximumBW = " + resultSparseHeap[i]);
+			System.out.println("Kruskal testing: " + durationSparseKruskals[i]/100000 + " ms, MaximumBW = " + resultSparseKruskals[i]);
 //			System.out.println();
 			System.out.println("The running duration for No." + i + " Dense Graph: ");
-			System.out.println("Basic testing:   " + durationDenseBasic[i]/100000 + " ms");
-			System.out.println("Heap testing:    " + durationDenseHeap[i]/100000 + " ms");
-			System.out.println("Kruskal testing: " + durationDenseKruskals[i]/100000 + " ms");
+			System.out.println("Basic testing:   " + durationDenseBasic[i]/100000 + " ms, MaximumBW = " + resultDenseBasic[i]);
+			System.out.println("Heap testing:    " + durationDenseHeap[i]/100000 + " ms, MaximumBW = " + resultDenseHeap[i]);
+			System.out.println("Kruskal testing: " + durationDenseKruskals[i]/100000 + " ms, MaximumBW = " + resultDenseKruskals[i]);
 			System.out.println();
 		}
 		
